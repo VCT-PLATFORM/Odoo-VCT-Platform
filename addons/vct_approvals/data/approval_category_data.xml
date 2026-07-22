@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="category_expense" model="approval.category">
+        <field name="name">Duyệt chi phí</field>
+        <field name="sequence">1</field>
+        <field name="approval_minimum">1</field>
+        <field name="has_amount" eval="True"/>
+        <field name="color">1</field>
+    </record>
+    <record id="category_leave" model="approval.category">
+        <field name="name">Duyệt nghỉ phép</field>
+        <field name="sequence">2</field>
+        <field name="approval_minimum">1</field>
+        <field name="has_date" eval="True"/>
+        <field name="color">4</field>
+    </record>
+    <record id="category_procurement" model="approval.category">
+        <field name="name">Duyệt mua sắm</field>
+        <field name="sequence">3</field>
+        <field name="approval_minimum">2</field>
+        <field name="has_amount" eval="True"/>
+        <field name="color">3</field>
+    </record>
+</odoo>

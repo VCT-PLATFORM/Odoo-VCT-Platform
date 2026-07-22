@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="approval_request_view_list" model="ir.ui.view">
+        <field name="name">approval.request.list</field>
+        <field name="model">approval.request</field>
+        <field name="arch" type="xml">
+            <list string="Yêu cầu phê duyệt" decoration-success="state=='approved'"
+                  decoration-danger="state=='refused'" decoration-muted="state=='cancel'">
+                <field name="name"/>
+                <field name="category_id"/>
+                <field name="request_owner_id"/>
+                <field name="date" optional="show"/>
+                <field name="amount" optional="show"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="state" widget="badge"
+                       decoration-success="state=='approved'" decoration-danger="state=='refused'"
+                       decoration-info="state=='pending'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="approval_request_view_form" model="ir.ui.view">
+        <field name="name">approval.request.form</field>
+        <field name="model">approval.request</field>
+        <field name="arch" type="xml">
+            <form string="Yêu cầu phê duyệt">
+                <header>
+                    <button name="action_confirm" type="object" string="Gửi duyệt"
+                            class="btn-primary" invisible="state != 'new'"/>
+                    <button name="action_approve" type="object" string="Duyệt"
+                            class="btn-primary" invisible="not can_approve"/>
+                    <button name="action_refuse" type="object" string="Từ chối"
+                            invisible="not can_approve"/>
+                    <button name="action_withdraw" type="object" string="Rút phê duyệt"
+                            invisible="state not in ('approved', 'refused')"/>
+                    <button name="action_cancel" type="object" string="Huỷ"
+                            invisible="state in ('cancel', 'approved')"/>
+                    <button name="action_draft" type="object" string="Về nháp"
+                            invisible="state not in ('cancel', 'refused')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="new,pending,approved"/>
+                </header>
+                <sheet>
+                    <field name="can_approve" invisible="1"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Tiêu đề yêu cầu"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="category_id"/>
+                            <field name="request_owner_id"/>
+                            <field name="date" invisible="not has_date"/>
+                            <field name="amount" invisible="not has_amount"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="has_date" invisible="1"/>
+                            <field name="has_amount" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="approval_minimum"/>
+                            <field name="approved_count"/>
+                        </group>
+                    </group>
+                    <separator string="Người duyệt"/>
+                    <field name="approver_ids">
+                        <list editable="bottom">
+                            <field name="user_id"/>
+                            <field name="status" widget="badge"
+                                   decoration-success="status=='approved'"
+                                   decoration-danger="status=='refused'"/>
+                        </list>
+                    </field>
+                    <separator string="Lý do / Nội dung"/>
+                    <field name="reason"/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="approval_request_view_search" model="ir.ui.view">
+        <field name="name">approval.request.search</field>
+        <field name="model">approval.request</field>
+        <field name="arch" type="xml">
+            <search string="Yêu cầu phê duyệt">
+                <field name="name"/>
+                <field name="category_id"/>
+                <field name="request_owner_id"/>
+                <filter name="my" string="Của tôi" domain="[('request_owner_id','=',uid)]"/>
+                <filter name="to_approve" string="Chờ tôi duyệt"
+                        domain="[('approver_ids.user_id','=',uid),('state','=','pending')]"/>
+                <separator/>
+                <filter name="pending" string="Đang chờ" domain="[('state','=','pending')]"/>
+                <filter name="approved" string="Đã duyệt" domain="[('state','=','approved')]"/>
+                <group>
+                    <filter name="group_category" string="Loại" context="{'group_by':'category_id'}"/>
+                    <filter name="group_state" string="Trạng thái" context="{'group_by':'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_approval_request_my" model="ir.actions.act_window">
+        <field name="name">Yêu cầu của tôi</field>
+        <field name="res_model">approval.request</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_my': 1}</field>
+    </record>
+
+    <record id="action_approval_request_to_approve" model="ir.actions.act_window">
+        <field name="name">Chờ tôi duyệt</field>
+        <field name="res_model">approval.request</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('approver_ids.user_id','=',uid),('state','=','pending')]</field>
+    </record>
+
+    <record id="action_approval_request_all" model="ir.actions.act_window">
+        <field name="name">Tất cả yêu cầu</field>
+        <field name="res_model">approval.request</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>
