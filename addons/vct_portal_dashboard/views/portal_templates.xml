@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_my_home_vct" inherit_id="portal.portal_my_home" name="VCT Portal My Home">
+
+        <!-- portal_layout wraps the "My account" heading, the col-lg-8 squeeze and
+             the right-hand contact card in one t-if="my_details". Turning the flag
+             off removes all three through Odoo's own mechanism and renders the
+             launcher full width — no CSS overrides needed. -->
+        <xpath expr="//t[@t-set='my_details']" position="replace">
+            <t t-set="my_details" t-value="False"/>
+        </xpath>
+
+        <xpath expr="//div[hasclass('o_portal_my_home')]" position="before">
+            <!-- Data-driven from the user's own root app menus (ir.ui.menu filters
+                 them by the user's groups), using each app's real Odoo icon.
+                 Everything resolves through request.env so the page never depends
+                 on a particular controller version being loaded. -->
+            <t t-set="vct_user" t-value="request.env.user"/>
+            <!-- exception.png is the placeholder icon Odoo gives technical menus
+                 (base.menu_tests); those are not apps, so keep them off the launcher -->
+            <t t-set="vct_apps"
+               t-value="request.env['ir.ui.menu'].search([
+                            ('parent_id', '=', False),
+                            ('web_icon', '!=', False),
+                            ('web_icon', 'not like', '%exception.png'),
+                        ])"/>
+
+            <div class="vct_launcher">
+
+                <div class="vct_lc_topbar">
+                    <span class="vct_lc_company" t-out="request.env.company.name"/>
+                    <a class="vct_lc_logout" href="/web/session/logout">Đăng xuất</a>
+                    <span class="vct_lc_avatar"><t t-out="(vct_user.name or 'U')[0].upper()"/></span>
+                </div>
+
+                <div class="vct_lc_grid">
+                    <t t-foreach="vct_apps" t-as="app">
+                        <a t-if="',' in (app.web_icon or '')"
+                           t-attf-href="/web#menu_id=#{app.id}" class="vct_lc_app">
+                            <!-- icon_fallback.js drops a missing icon (inline onerror=
+                                 is blocked by CSP) so the tile shows the app initial
+                                 instead of a broken image -->
+                            <span class="vct_lc_tile"
+                                  t-attf-data-ini="#{(app.name or '?')[0].upper()}">
+                                <img t-attf-src="/#{app.web_icon.replace(',', '/')}"
+                                     t-att-alt="app.name"/>
+                            </span>
+                            <span class="vct_lc_name" t-out="app.name"/>
+                        </a>
+                    </t>
+                </div>
+
+            </div>
+        </xpath>
+
+        <xpath expr="//div[hasclass('o_portal_my_home')]" position="attributes">
+            <attribute name="class">o_portal_my_home d-none</attribute>
+        </xpath>
+
+    </template>
+</odoo>

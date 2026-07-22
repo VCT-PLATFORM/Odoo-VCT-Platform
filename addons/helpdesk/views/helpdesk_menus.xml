@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="menu_helpdesk_root" name="Helpdesk" sequence="70"
+        web_icon="helpdesk,static/description/icon.png"
+        groups="helpdesk.group_helpdesk_user"/>
+
+    <menuitem id="menu_helpdesk_tickets" name="Tickets" parent="menu_helpdesk_root" sequence="10"/>
+    <menuitem id="menu_helpdesk_ticket_my" action="helpdesk_ticket_action_my"
+        parent="menu_helpdesk_tickets" sequence="10"/>
+    <menuitem id="menu_helpdesk_ticket_all" action="helpdesk_ticket_action_main"
+        parent="menu_helpdesk_tickets" sequence="20"/>
+
+    <menuitem id="menu_helpdesk_reporting" name="Reporting" parent="menu_helpdesk_root" sequence="20"
+        groups="helpdesk.group_helpdesk_manager"/>
+    <menuitem id="menu_helpdesk_ticket_report" action="helpdesk_ticket_action_report"
+        parent="menu_helpdesk_reporting" sequence="10"/>
+    <menuitem id="menu_helpdesk_rating_report" action="rating_rating_action_helpdesk"
+        parent="menu_helpdesk_reporting" sequence="20"/>
+
+    <menuitem id="menu_helpdesk_config" name="Configuration" parent="menu_helpdesk_root" sequence="30"
+        groups="helpdesk.group_helpdesk_manager"/>
+    <menuitem id="menu_helpdesk_team" action="helpdesk_team_action"
+        parent="menu_helpdesk_config" sequence="10"/>
+    <menuitem id="menu_helpdesk_stage" action="helpdesk_stage_action"
+        parent="menu_helpdesk_config" sequence="20"/>
+    <menuitem id="menu_helpdesk_sla" action="helpdesk_sla_action"
+        parent="menu_helpdesk_config" sequence="30"/>
+    <menuitem id="menu_helpdesk_tag" action="helpdesk_tag_action"
+        parent="menu_helpdesk_config" sequence="40"/>
+
+</odoo>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- base's ir_module_module.xml ships an `appointment` teaser with to_buy=1
+         and no noupdate, so the Apps page shows an Upgrade link instead of this
+         module. Clear it: there is real code behind the name now. -->
+    <function model="ir.module.module" name="write">
+        <function eval="[[('name','=','appointment')]]" model="ir.module.module" name="search"/>
+        <value eval="{'to_buy': False}"/>
+    </function>
+</odoo>

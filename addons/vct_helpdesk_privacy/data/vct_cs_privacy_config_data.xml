@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Che dữ liệu TẮT sẵn — bật khi đã kiểm mẫu khớp dữ liệu thật. -->
+    <record id="privacy_config_default" model="vct.cs.privacy.config">
+        <field name="name">Cấu hình bảo mật CSKH</field>
+        <field name="mask_enabled" eval="False"/>
+    </record>
+</odoo>

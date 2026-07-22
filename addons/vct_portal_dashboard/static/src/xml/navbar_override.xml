@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="web.NavBar.AppsMenu" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_navbar_apps_menu')]/Dropdown" position="replace">
+            <a href="/my" data-hotkey="h" title="Trở về Trang Portal Dashboard" class="btn border-0 text-reset d-flex align-items-center h-100 px-3 fs-4">
+                <i class="oi oi-apps"/>
+            </a>
+        </xpath>
+    </t>
+
+    <t t-inherit="web.NavBar.AppsMenu.Sidebar" t-inherit-mode="extension">
+        <xpath expr="//a[hasclass('btn-primary')]" position="attributes">
+            <attribute name="href">/my</attribute>
+            <attribute name="t-on-click.prevent"/>
+        </xpath>
+    </t>
+</templates>

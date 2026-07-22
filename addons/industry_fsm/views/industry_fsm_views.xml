@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="project_project_view_form_fsm" model="ir.ui.view">
+        <field name="name">project.project.view.form.fsm</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <field name="user_id" position="after">
+                <field name="is_fsm"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="project_task_view_form_fsm" model="ir.ui.view">
+        <field name="name">project.task.view.form.fsm</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="arch" type="xml">
+            <header position="inside">
+                <!-- the Bấm giờ / Dừng buttons come from timesheet_grid: the same
+                     clock serves every task, so FSM only adds its own two -->
+                <field name="is_fsm" invisible="1"/>
+                <field name="fsm_done" invisible="1"/>
+                <button name="action_fsm_validate" type="object" string="Hoàn thành"
+                        invisible="not is_fsm or fsm_done"/>
+                <button name="action_fsm_reopen" type="object" string="Mở lại"
+                        invisible="not is_fsm or not fsm_done"/>
+            </header>
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <button name="action_view_timesheets" type="object" class="oe_stat_button"
+                        icon="fa-clock-o" invisible="not is_fsm">
+                    <field name="effective_hours" widget="statinfo" string="Giờ công"/>
+                </button>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Nghiệm thu" name="fsm_signature" invisible="not is_fsm">
+                    <group>
+                        <field name="fsm_signed_by" placeholder="Tên người ký"/>
+                        <field name="fsm_signed_on" readonly="1" invisible="not fsm_signed_on"/>
+                    </group>
+                    <field name="fsm_signature" widget="signature"
+                           options="{'full_name': 'fsm_signed_by'}"/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_fsm_my_tasks" model="ir.actions.act_window">
+        <field name="name">Công việc của tôi</field>
+        <field name="res_model">project.task</field>
+        <field name="view_mode">kanban,list,form,calendar,activity</field>
+        <field name="domain">[('is_fsm', '=', True), ('user_ids', 'in', uid)]</field>
+        <field name="context" eval="{'default_project_id': ref('industry_fsm.fsm_project')}"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa có việc nào ngoài hiện trường</p>
+            <p>Bấm giờ khi tới nơi, dừng khi xong: giờ công được ghi lại tự động.</p>
+        </field>
+    </record>
+
+    <record id="action_fsm_all_tasks" model="ir.actions.act_window">
+        <field name="name">Tất cả công việc</field>
+        <field name="res_model">project.task</field>
+        <field name="view_mode">kanban,list,form,calendar,activity</field>
+        <field name="domain">[('is_fsm', '=', True)]</field>
+        <field name="context" eval="{'default_project_id': ref('industry_fsm.fsm_project')}"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa có việc nào ngoài hiện trường</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_fsm_root" name="Dịch vụ hiện trường" sequence="95"
+        web_icon="industry_fsm,static/description/icon.png"
+        groups="project.group_project_user"/>
+    <menuitem id="menu_fsm_my_tasks" action="action_fsm_my_tasks"
+        parent="menu_fsm_root" sequence="10"/>
+    <menuitem id="menu_fsm_all_tasks" action="action_fsm_all_tasks"
+        parent="menu_fsm_root" sequence="20"/>
+
+</odoo>

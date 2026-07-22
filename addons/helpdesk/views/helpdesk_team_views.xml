@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="helpdesk_team_view_list" model="ir.ui.view">
+        <field name="name">helpdesk.team.view.list</field>
+        <field name="model">helpdesk.team</field>
+        <field name="arch" type="xml">
+            <list string="Teams">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="alias_email" string="Email Alias"/>
+                <field name="assign_method"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="helpdesk_team_view_form" model="ir.ui.view">
+        <field name="name">helpdesk.team.view.form</field>
+        <field name="model">helpdesk.team</field>
+        <field name="arch" type="xml">
+            <form string="Helpdesk Team">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_tickets" type="object" class="oe_stat_button" icon="fa-life-ring">
+                            <field name="ticket_count" widget="statinfo" string="Open Tickets"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="active" invisible="1"/>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="e.g. Customer Care"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="alias_id" invisible="1"/>
+                            <label for="alias_name" string="Email Alias"/>
+                            <div name="alias_def" class="d-flex">
+                                <field name="alias_name" placeholder="e.g. support"/>@
+                                <field name="alias_domain_id" placeholder="e.g. mycompany.com" options="{'no_create': True, 'no_open': True}"/>
+                            </div>
+                            <field name="assign_method"/>
+                        </group>
+                        <group>
+                            <field name="resource_calendar_id"/>
+                            <field name="allow_portal_close"/>
+                            <field name="closed_stage_id" invisible="not allow_portal_close"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <group string="Team Members">
+                        <field name="member_ids" nolabel="1" colspan="2" widget="many2many_avatar_user"/>
+                    </group>
+                    <notebook>
+                        <page string="SLA Policies" name="sla">
+                            <field name="sla_ids" nolabel="1">
+                                <list editable="bottom">
+                                    <field name="name"/>
+                                    <field name="stage_id" domain="['|', ('team_ids', '=', False), ('team_ids', 'in', parent.id)]"/>
+                                    <field name="priority" widget="priority"/>
+                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                    <field name="time" widget="float_time" string="Within"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Description" name="description">
+                            <field name="description" placeholder="Add a description of the team..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="helpdesk_team_action" model="ir.actions.act_window">
+        <field name="name">Teams</field>
+        <field name="res_model">helpdesk.team</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create a new helpdesk team</p>
+        </field>
+    </record>
+
+    <record id="helpdesk_stage_view_list" model="ir.ui.view">
+        <field name="name">helpdesk.stage.view.list</field>
+        <field name="model">helpdesk.stage</field>
+        <field name="arch" type="xml">
+            <list string="Stages" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="fold"/>
+                <field name="template_id"/>
+                <field name="rating_template_id"/>
+                <field name="team_ids" widget="many2many_tags"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="helpdesk_stage_action" model="ir.actions.act_window">
+        <field name="name">Stages</field>
+        <field name="res_model">helpdesk.stage</field>
+        <field name="view_mode">list</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create a new stage</p>
+        </field>
+    </record>
+
+    <record id="helpdesk_tag_view_list" model="ir.ui.view">
+        <field name="name">helpdesk.tag.view.list</field>
+        <field name="model">helpdesk.tag</field>
+        <field name="arch" type="xml">
+            <list string="Tags" editable="bottom">
+                <field name="name"/>
+                <field name="color" widget="color_picker"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="helpdesk_tag_action" model="ir.actions.act_window">
+        <field name="name">Tags</field>
+        <field name="res_model">helpdesk.tag</field>
+        <field name="view_mode">list</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create a new tag</p>
+        </field>
+    </record>
+
+</odoo>

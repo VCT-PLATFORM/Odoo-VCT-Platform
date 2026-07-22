@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="vct_cs_tier_view_list" model="ir.ui.view">
+        <field name="name">vct.cs.tier.list</field>
+        <field name="model">vct.cs.tier</field>
+        <field name="arch" type="xml">
+            <list string="Hạng CSKH">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="ticket_priority" widget="priority"/>
+                <field name="sla_tag_id"/>
+                <field name="partner_count"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="vct_cs_tier_view_form" model="ir.ui.view">
+        <field name="name">vct.cs.tier.form</field>
+        <field name="model">vct.cs.tier</field>
+        <field name="arch" type="xml">
+            <form string="Hạng CSKH">
+                <sheet>
+                    <widget name="web_ribbon" title="Đã lưu trữ" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Vd: VIP"/></h1>
+                    </div>
+                    <group>
+                        <field name="ticket_priority" widget="priority"/>
+                        <field name="sla_tag_id"/>
+                        <field name="color" widget="color_picker"/>
+                        <field name="sequence"/>
+                        <field name="active" invisible="1"/>
+                    </group>
+                    <p class="text-muted">
+                        Ticket của KH thuộc hạng này sẽ tự nâng lên mức ưu tiên đã chọn (khi đang thấp hơn)
+                        và được gắn thẻ SLA để chính sách SLA tương ứng áp dụng.
+                    </p>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_vct_cs_tier" model="ir.actions.act_window">
+        <field name="name">Hạng khách hàng CSKH</field>
+        <field name="res_model">vct.cs.tier</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Tạo hạng khách hàng đầu tiên</p>
+            <p>Phân hạng KH (VIP/Thường...) để tự quyết định ưu tiên và SLA của ticket.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_vct_cs_tier" name="Hạng khách hàng CSKH"
+        parent="helpdesk.menu_helpdesk_config" action="action_vct_cs_tier" sequence="50"/>
+</odoo>

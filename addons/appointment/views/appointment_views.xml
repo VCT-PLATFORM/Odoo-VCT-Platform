@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="appointment_type_view_list" model="ir.ui.view">
+        <field name="name">appointment.type.view.list</field>
+        <field name="model">appointment.type</field>
+        <field name="arch" type="xml">
+            <list string="Loại lịch hẹn">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="duration"/>
+                <field name="staff_user_ids" widget="many2many_tags"/>
+                <field name="location" optional="show"/>
+                <field name="website_published"/>
+                <field name="appointment_count" string="Lịch hẹn"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="appointment_type_view_form" model="ir.ui.view">
+        <field name="name">appointment.type.view.form</field>
+        <field name="model">appointment.type</field>
+        <field name="arch" type="xml">
+            <form string="Loại lịch hẹn">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_appointments" type="object"
+                                class="oe_stat_button" icon="fa-calendar">
+                            <field name="appointment_count" widget="statinfo" string="Lịch hẹn"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Đã lưu trữ" bg_color="text-bg-danger"
+                            invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Tư vấn tại văn phòng"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="duration"/>
+                            <field name="staff_user_ids" widget="many2many_tags"/>
+                            <field name="location"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="resource_calendar_id"/>
+                            <field name="tz"/>
+                            <field name="min_hours_before"/>
+                            <field name="max_days_ahead"/>
+                            <field name="website_published"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-info" role="alert" invisible="not website_published">
+                        Trang đặt lịch công khai: <code>/dat-lich</code>.
+                        Khung giờ chỉ sinh trong Giờ làm việc đã chọn và đã trừ ngày nghỉ.
+                    </div>
+                    <notebook>
+                        <page string="Mô tả" name="description">
+                            <field name="description" placeholder="Hiện trên trang đặt lịch..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="appointment_type_view_search" model="ir.ui.view">
+        <field name="name">appointment.type.view.search</field>
+        <field name="model">appointment.type</field>
+        <field name="arch" type="xml">
+            <search string="Loại lịch hẹn">
+                <field name="name"/>
+                <field name="staff_user_ids"/>
+                <filter name="published" string="Đã đăng website"
+                        domain="[('website_published', '=', True)]"/>
+                <filter name="inactive" string="Đã lưu trữ"
+                        domain="[('active', '=', False)]"/>
+                <group>
+                    <filter name="group_calendar" string="Giờ làm việc"
+                            context="{'group_by': 'resource_calendar_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_appointment_type" model="ir.actions.act_window">
+        <field name="name">Loại lịch hẹn</field>
+        <field name="res_model">appointment.type</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Tạo loại lịch hẹn đầu tiên</p>
+            <p>Chọn thời lượng và nhân sự tiếp nhận; khách tự chọn giờ trống tại <code>/dat-lich</code>.</p>
+        </field>
+    </record>
+
+    <record id="action_appointment_calendar" model="ir.actions.act_window">
+        <field name="name">Lịch hẹn</field>
+        <field name="res_model">calendar.event</field>
+        <field name="view_mode">calendar,list,form</field>
+        <field name="domain">[('appointment_type_id', '!=', False)]</field>
+    </record>
+
+    <menuitem id="menu_appointment_root" name="Lịch hẹn" sequence="96"
+        web_icon="appointment,static/description/icon.png"/>
+    <menuitem id="menu_appointment_calendar" action="action_appointment_calendar"
+        parent="menu_appointment_root" sequence="10"/>
+    <menuitem id="menu_appointment_config" name="Cấu hình"
+        parent="menu_appointment_root" sequence="90" groups="base.group_system"/>
+    <menuitem id="menu_appointment_type" action="action_appointment_type"
+        parent="menu_appointment_config" sequence="10"/>
+
+</odoo>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Hạng KH mẫu — người dùng tự sửa/thêm sau (noupdate giữ chỉnh sửa) -->
+    <record id="cs_tier_vip" model="vct.cs.tier">
+        <field name="name">VIP</field>
+        <field name="sequence">1</field>
+        <field name="ticket_priority">3</field>
+        <field name="color">1</field>
+    </record>
+    <record id="cs_tier_standard" model="vct.cs.tier">
+        <field name="name">Thường</field>
+        <field name="sequence">10</field>
+        <field name="ticket_priority">1</field>
+    </record>
+</odoo>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="appointment_index" name="Đặt lịch hẹn">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure">
+                <div class="container py-5">
+                    <h1 class="mb-4">Đặt lịch hẹn</h1>
+                    <t t-if="not appointment_types">
+                        <p class="text-muted">Hiện chưa có loại lịch hẹn nào được mở.</p>
+                    </t>
+                    <div class="row">
+                        <t t-foreach="appointment_types" t-as="appointment_type">
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title" t-field="appointment_type.name"/>
+                                        <p class="card-text text-muted">
+                                            <t t-esc="appointment_type.duration"/> giờ
+                                            <t t-if="appointment_type.location">
+                                                · <t t-esc="appointment_type.location"/>
+                                            </t>
+                                        </p>
+                                        <a t-attf-href="/dat-lich/#{appointment_type.id}"
+                                           class="btn btn-primary">Chọn giờ</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="appointment_slots" name="Chọn khung giờ">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure">
+                <div class="container py-5">
+                    <h1 t-field="appointment_type.name"/>
+                    <p class="text-muted">
+                        <t t-esc="appointment_type.duration"/> giờ
+                        <t t-if="appointment_type.location">
+                            · <t t-esc="appointment_type.location"/>
+                        </t>
+                        · Giờ <t t-esc="appointment_type.tz"/>
+                    </p>
+                    <div t-if="appointment_type.description" t-field="appointment_type.description"/>
+
+                    <div t-if="error == 'taken'" class="alert alert-warning">
+                        Rất tiếc, khung giờ đó vừa có người đặt. Mời chọn giờ khác.
+                    </div>
+                    <div t-if="error == 'missing'" class="alert alert-warning">
+                        Vui lòng nhập họ tên và email.
+                    </div>
+                    <div t-if="error == 'slot'" class="alert alert-warning">
+                        Khung giờ không hợp lệ. Mời chọn lại.
+                    </div>
+
+                    <t t-if="not slots_by_day">
+                        <p class="alert alert-info">
+                            Chưa có khung giờ trống trong <t t-esc="appointment_type.max_days_ahead"/> ngày tới.
+                        </p>
+                    </t>
+
+                    <form t-if="slots_by_day" method="POST"
+                          t-attf-action="/dat-lich/#{appointment_type.id}/confirm">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <div class="row">
+                            <div class="col-md-7">
+                                <h5 class="mt-3">Chọn khung giờ</h5>
+                                <t t-foreach="slots_by_day" t-as="day">
+                                    <div class="mb-3">
+                                        <strong t-esc="day[0].strftime('%d/%m/%Y')"/>
+                                        <div class="mt-1">
+                                            <t t-foreach="day[1]" t-as="slot">
+                                                <label class="btn btn-outline-primary btn-sm me-1 mb-1">
+                                                    <input type="radio" name="slot" class="d-none"
+                                                           t-att-value="slot[0]" required="required"/>
+                                                    <t t-esc="slot[1].strftime('%H:%M')"/>
+                                                </label>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                            <div class="col-md-5">
+                                <h5 class="mt-3">Thông tin của bạn</h5>
+                                <div class="mb-2">
+                                    <label class="form-label" for="name">Họ tên</label>
+                                    <input type="text" class="form-control" id="name" name="name"
+                                           required="required"/>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label" for="email">Email</label>
+                                    <input type="email" class="form-control" id="email" name="email"
+                                           required="required"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label" for="phone">Điện thoại</label>
+                                    <input type="tel" class="form-control" id="phone" name="phone"/>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Xác nhận đặt lịch</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="appointment_booked" name="Đã đặt lịch">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure">
+                <div class="container py-5">
+                    <div class="alert alert-success">
+                        <h4>Đã đặt lịch xong</h4>
+                        <p class="mb-0">
+                            <strong t-field="appointment_type.name"/><br/>
+                            <t t-esc="local_start.strftime('%H:%M ngày %d/%m/%Y')"/>
+                            (giờ <t t-esc="appointment_type.tz"/>)<br/>
+                            <t t-if="appointment_type.location">
+                                Địa điểm: <t t-esc="appointment_type.location"/><br/>
+                            </t>
+                            Người tiếp: <t t-esc="event.user_id.name"/>
+                        </p>
+                    </div>
+                    <a href="/dat-lich" class="btn btn-secondary">Đặt lịch khác</a>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</odoo>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Pivot: kéo-thả chiều/số liệu, nối dữ liệu CS với ERP (hạng KH). Xuất Excel gốc Odoo. -->
+    <record id="helpdesk_ticket_view_pivot_cs" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.pivot.cs</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="arch" type="xml">
+            <pivot string="Phân tích CSKH" sample="1">
+                <field name="cs_tier_id" type="row"/>
+                <field name="team_id" type="col"/>
+                <field name="sla_fail" type="measure"/>
+                <field name="rating_last_value" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="helpdesk_ticket_view_graph_cs" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.graph.cs</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="arch" type="xml">
+            <graph string="Phân tích CSKH" type="bar" sample="1">
+                <field name="cs_tier_id"/>
+                <field name="sla_fail" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_helpdesk_cs_analysis" model="ir.actions.act_window">
+        <field name="name">Phân tích CSKH (360°)</field>
+        <field name="res_model">helpdesk.ticket</field>
+        <field name="view_mode">pivot,graph,list</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'sequence': 1, 'view_mode': 'pivot', 'view_id': ref('helpdesk_ticket_view_pivot_cs')}),
+            (0, 0, {'sequence': 2, 'view_mode': 'graph', 'view_id': ref('helpdesk_ticket_view_graph_cs')})]"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Phân tích chăm sóc khách hàng theo dữ liệu ERP</p>
+            <p>Kéo-thả chiều (hạng KH, đội, giai đoạn, ưu tiên, thời gian) và số liệu (số ticket,
+               SLA trễ, điểm CSAT). Lưu góc nhìn, xuất Excel bằng công cụ gốc Odoo.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_helpdesk_cs_analysis" name="Phân tích CSKH (360°)"
+        parent="helpdesk.menu_helpdesk_reporting" action="action_helpdesk_cs_analysis" sequence="50"/>
+</odoo>

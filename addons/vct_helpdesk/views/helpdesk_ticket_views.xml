@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="helpdesk_ticket_view_form_vct" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.form.vct.360</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
+        <field name="arch" type="xml">
+            <!-- Smart buttons: ticket con + toàn bộ ticket của KH -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_open_child_tickets" type="object" class="oe_stat_button"
+                        icon="fa-sitemap" invisible="child_count == 0">
+                    <field name="child_count" widget="statinfo" string="Ticket con"/>
+                </button>
+                <button name="action_open_partner_tickets" type="object" class="oe_stat_button"
+                        icon="fa-life-ring" invisible="not commercial_partner_id">
+                    <field name="partner_ticket_count" widget="statinfo" string="Ticket của KH"/>
+                </button>
+            </xpath>
+
+            <!-- Badge hạng KH ngay dưới khách hàng -->
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="cs_tier_id" widget="badge" readonly="1" invisible="not cs_tier_id"
+                       decoration-warning="cs_tier_id"/>
+            </xpath>
+
+            <!-- Trang Toàn cảnh khách hàng (ERP 360°) -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Toàn cảnh khách hàng" name="vct_360">
+                    <field name="company_currency_id" invisible="1"/>
+                    <field name="commercial_partner_id" invisible="1"/>
+                    <group>
+                        <group string="Gắn nghiệp vụ ERP">
+                            <field name="sale_order_id"/>
+                            <field name="invoice_id"/>
+                            <field name="parent_id"/>
+                            <field name="related_ticket_ids" widget="many2many_tags"/>
+                        </group>
+                        <group string="Tổng quan khách hàng">
+                            <field name="cs_tier_id" readonly="1"/>
+                            <field name="partner_due_amount"/>
+                            <field name="partner_sale_count"/>
+                            <field name="partner_sale_total"/>
+                            <field name="partner_last_order_id"/>
+                            <field name="partner_ticket_count"/>
+                            <field name="partner_warranty_count"/>
+                        </group>
+                    </group>
+                    <field name="child_ids" invisible="not child_ids">
+                        <list string="Ticket con">
+                            <field name="name"/>
+                            <field name="stage_id"/>
+                            <field name="user_id"/>
+                            <field name="priority" widget="priority"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="helpdesk_ticket_view_search_vct" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.search.vct</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <separator/>
+                <filter name="vct_group_tier" string="Hạng KH" context="{'group_by': 'cs_tier_id'}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

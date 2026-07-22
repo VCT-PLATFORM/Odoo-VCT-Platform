@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="menu_knowledge_root" name="Kiến thức" sequence="90"
+        web_icon="knowledge,static/description/icon.png"
+        groups="knowledge.group_knowledge_user"/>
+    <menuitem id="menu_knowledge_articles" action="knowledge_article_action"
+        parent="menu_knowledge_root" sequence="10"/>
+    <menuitem id="menu_knowledge_favorites" action="knowledge_article_action_favorites"
+        parent="menu_knowledge_root" sequence="20"/>
+
+</odoo>

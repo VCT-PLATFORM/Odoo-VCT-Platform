@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_vct_cs_ai_config_user,vct.cs.ai.config user,model_vct_cs_ai_config,helpdesk.group_helpdesk_user,1,0,0,0
+access_vct_cs_ai_config_manager,vct.cs.ai.config manager,model_vct_cs_ai_config,helpdesk.group_helpdesk_manager,1,1,1,1
+access_vct_cs_ai_log_user,vct.cs.ai.log user,model_vct_cs_ai_log,helpdesk.group_helpdesk_user,1,0,0,0
+access_vct_cs_ai_log_manager,vct.cs.ai.log manager,model_vct_cs_ai_log,helpdesk.group_helpdesk_manager,1,1,1,1
+access_vct_cs_copilot_user,vct.cs.copilot user,model_vct_cs_copilot,helpdesk.group_helpdesk_user,1,1,1,1
+access_vct_cs_qa_score_user,vct.cs.qa.score user,model_vct_cs_qa_score,helpdesk.group_helpdesk_user,1,1,1,0
+access_vct_cs_qa_score_manager,vct.cs.qa.score manager,model_vct_cs_qa_score,helpdesk.group_helpdesk_manager,1,1,1,1

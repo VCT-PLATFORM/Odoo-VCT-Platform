@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="vct_cs_ai_config_view_form" model="ir.ui.view">
+        <field name="name">vct.cs.ai.config.form</field>
+        <field name="model">vct.cs.ai.config</field>
+        <field name="arch" type="xml">
+            <form string="Cấu hình AI CSKH">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_logs" type="object"
+                                class="oe_stat_button" icon="fa-list">
+                            <field name="log_count" widget="statinfo" string="Lượt AI"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group string="Kênh">
+                            <field name="zalo_autoreply"/>
+                            <field name="include_partner_context"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group string="Knowledge Base (RAG)">
+                            <field name="kb_root_article_id"/>
+                            <field name="max_kb"/>
+                        </group>
+                    </group>
+                    <separator string="Chính sách/Hướng dẫn cho AI"/>
+                    <field name="policy_text" placeholder="Ví dụ: Giờ làm 8–17 T2–T6. Đổi trả trong 7 ngày. Không tự hứa giảm giá..."/>
+                    <div class="alert alert-warning" role="alert" invisible="not zalo_autoreply">
+                        AI đang TỰ trả lời khách trên Zalo. AI chỉ dùng dữ liệu của đúng khách đã xác thực
+                        và Knowledge Base; không đủ thông tin thì tự chuyển nhân viên.
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="vct_cs_ai_config_view_list" model="ir.ui.view">
+        <field name="name">vct.cs.ai.config.list</field>
+        <field name="model">vct.cs.ai.config</field>
+        <field name="arch" type="xml">
+            <list string="Cấu hình AI CSKH">
+                <field name="name"/>
+                <field name="zalo_autoreply" widget="boolean_toggle"/>
+                <field name="log_count"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_vct_cs_ai_config" model="ir.actions.act_window">
+        <field name="name">Cấu hình AI CSKH</field>
+        <field name="res_model">vct.cs.ai.config</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_vct_cs_ai_config" name="AI chăm sóc khách"
+        parent="helpdesk.menu_helpdesk_config" action="action_vct_cs_ai_config" sequence="70"/>
+</odoo>

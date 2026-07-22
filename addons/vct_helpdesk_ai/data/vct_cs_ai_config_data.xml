@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Cấu hình mặc định. AUTOREPLY TẮT sẵn — bật thủ công khi đã kiểm KB + policy,
+         để AI không tự trả lời khách trước khi bạn sẵn sàng. -->
+    <record id="cs_ai_config_default" model="vct.cs.ai.config">
+        <field name="name">Cấu hình AI CSKH</field>
+        <field name="zalo_autoreply" eval="False"/>
+    </record>
+</odoo>

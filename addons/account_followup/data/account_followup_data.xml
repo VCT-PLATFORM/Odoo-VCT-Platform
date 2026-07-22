@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- declared before the levels that reference it: data records load in order -->
+    <record id="mail_template_followup" model="mail.template">
+        <field name="name">Kế toán: Nhắc nợ khách hàng</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="subject">{{ object.company_id.name or user.env.company.name }}: Nhắc thanh toán công nợ quá hạn</field>
+        <field name="email_from">{{ user.email_formatted }}</field>
+        <field name="partner_to">{{ object.id }}</field>
+        <field name="use_default_to" eval="False"/>
+        <field name="description">Được gửi cho khách hàng khi công nợ đạt tới một mức nhắc nợ</field>
+        <field name="body_html" type="html">
+<div style="margin:0px;padding:0px;font-size:13px;">
+    <p>Kính gửi <t t-out="object.name or ''">Công ty ABC</t>,</p>
+    <p>
+        Theo sổ sách của chúng tôi, quý khách đang có khoản công nợ quá hạn với tổng số tiền
+        <strong t-out="object.currency_id.format(object.followup_overdue_amount)">1.000.000 ₫</strong>.
+    </p>
+    <p>
+        Nếu quý khách đã thanh toán, vui lòng bỏ qua email này. Nếu chưa, rất mong quý khách
+        sắp xếp thanh toán trong thời gian sớm nhất.
+    </p>
+    <p>
+        Trường hợp có sai sót hoặc cần đối chiếu lại, xin vui lòng phản hồi email này để
+        chúng tôi kiểm tra.
+    </p>
+    <p>Trân trọng cảm ơn,<br/><t t-out="user.name or ''">Nhân viên kế toán</t></p>
+</div>
+        </field>
+        <field name="lang">{{ object.lang }}</field>
+        <field name="auto_delete" eval="True"/>
+    </record>
+
+    <record id="followup_level_reminder" model="account.followup.level">
+        <field name="name">Nhắc lần 1</field>
+        <field name="delay">7</field>
+        <field name="template_id" ref="mail_template_followup"/>
+    </record>
+    <record id="followup_level_warning" model="account.followup.level">
+        <field name="name">Nhắc lần 2</field>
+        <field name="delay">30</field>
+        <field name="template_id" ref="mail_template_followup"/>
+    </record>
+    <record id="followup_level_final" model="account.followup.level">
+        <field name="name">Cảnh báo cuối</field>
+        <field name="delay">60</field>
+        <field name="template_id" ref="mail_template_followup"/>
+    </record>
+
+</odoo>

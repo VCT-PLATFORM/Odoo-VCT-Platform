@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- account labels its settings panel "Invoicing" because Community stops
+         there. The app itself is now Accounting, so the panel should say so too.
+         The label is translatable: i18n/vi.po carries the Vietnamese. -->
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.accountant</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="61"/>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='account']" position="attributes">
+                <attribute name="string">Accounting</attribute>
+                <attribute name="data-string">Accounting</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

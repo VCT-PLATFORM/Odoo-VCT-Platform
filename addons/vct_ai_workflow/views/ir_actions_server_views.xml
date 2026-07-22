@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_ai_workflow_list" model="ir.ui.view">
+        <field name="name">ir.actions.server.ai.workflow.list</field>
+        <field name="model">ir.actions.server</field>
+        <field name="arch" type="xml">
+            <list string="Workflow AI">
+                <field name="name"/>
+                <field name="model_id"/>
+                <field name="state"/>
+                <field name="ai_use_tools" optional="show"/>
+                <field name="binding_model_id" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ai_workflow_form" model="ir.ui.view">
+        <field name="name">ir.actions.server.ai.workflow.form</field>
+        <field name="model">ir.actions.server</field>
+        <field name="arch" type="xml">
+            <form string="Workflow AI">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="run" type="object" class="oe_stat_button"
+                                icon="fa-play" string="Chạy thử"
+                                help="Chạy trên bản ghi đang chọn (cần ngữ cảnh bản ghi)"/>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="AI: Tóm tắt phiếu hỗ trợ"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="model_id" options="{'no_create': True}"/>
+                            <field name="state"/>
+                            <field name="is_ai_workflow" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="binding_model_id" options="{'no_create': True}"
+                                   help="Đặt model để workflow hiện trong menu Hành động của bản ghi."/>
+                            <field name="binding_type" invisible="1"/>
+                        </group>
+                    </group>
+                    <group string="Cấu hình bước AI" invisible="state != 'ai_agent'">
+                        <field name="ai_prompt" nolabel="1"
+                               placeholder="Tóm tắt {{ name }} của {{ partner_id.name }} và đề xuất hướng xử lý..."/>
+                        <field name="ai_use_tools"/>
+                        <field name="ai_result_field_id" options="{'no_create': True}"/>
+                    </group>
+                    <div class="alert alert-info" role="alert" invisible="state != 'ai_agent'">
+                        Chèn dữ liệu bản ghi bằng <code>{{ tên_trường }}</code>, ví dụ
+                        <code>{{ name }}</code>, <code>{{ partner_id.name }}</code>.
+                        Bật "dùng công cụ" để AI được đọc/ghi dữ liệu Odoo (theo quyền người chạy).
+                    </div>
+                    <group string="Cấu hình điều kiện (rẽ nhánh)" invisible="state != 'ai_condition'">
+                        <field name="condition_expr"
+                               placeholder="record.amount_total &gt; 10000000 and record.state == 'draft'"/>
+                        <field name="then_action_id" options="{'no_create': True}"/>
+                        <field name="else_action_id" options="{'no_create': True}"/>
+                    </group>
+                    <div class="alert alert-info" role="alert" invisible="state != 'ai_condition'">
+                        Biểu thức Python trên <code>record</code>. Đúng → chạy nhánh "Nếu ĐÚNG",
+                        sai → chạy nhánh "Nếu SAI". Mỗi nhánh là một Server Action khác (kể cả một bước AI).
+                    </div>
+                    <group string="Cấu hình HTTP" invisible="state != 'ai_http'">
+                        <field name="http_method"/>
+                        <field name="http_url" placeholder="https://api.vidu.com/webhook/{{ id }}"/>
+                        <field name="http_result_field_id" options="{'no_create': True}"/>
+                        <field name="http_timeout"/>
+                        <field name="http_headers" placeholder='{"Authorization": "Bearer ..."}'/>
+                        <field name="http_body" placeholder='{"ten": "{{ name }}", "so_tien": "{{ amount_total }}"}'
+                               invisible="http_method not in ('post','put','patch')"/>
+                    </group>
+                    <div class="alert alert-info" role="alert" invisible="state != 'ai_http'">
+                        Gọi API ngoài rồi lưu phản hồi vào một trường để bước sau dùng lại.
+                        URL và Body hỗ trợ <code>{{ tên_trường }}</code>.
+                    </div>
+                    <group string="Các bước con (chạy tuần tự)" invisible="state != 'multi'">
+                        <field name="child_ids" nolabel="1">
+                            <list>
+                                <field name="sequence" widget="handle"/>
+                                <field name="name"/>
+                                <field name="state"/>
+                            </list>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ai_workflow" model="ir.actions.act_window">
+        <field name="name">Workflow AI</field>
+        <field name="res_model">ir.actions.server</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('is_ai_workflow', '=', True)]</field>
+        <field name="context">{'default_is_ai_workflow': True, 'default_state': 'ai_agent'}</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'sequence': 1, 'view_mode': 'list', 'view_id': ref('view_ai_workflow_list')}),
+            (0, 0, {'sequence': 2, 'view_mode': 'form', 'view_id': ref('view_ai_workflow_form')})]"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Tạo workflow AI đầu tiên</p>
+            <p>Một bước "AI Agent" chạy chỉ dẫn qua Trợ lý AI. Đặt Model liên kết để
+               workflow hiện trong menu Hành động của bản ghi, hoặc gắn vào một
+               Quy tắc tự động để chạy theo sự kiện/lịch.</p>
+        </field>
+    </record>
+
+</odoo>

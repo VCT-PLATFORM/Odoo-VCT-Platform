@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_asset_view_list" model="ir.ui.view">
+        <field name="name">account.asset.view.list</field>
+        <field name="model">account.asset</field>
+        <field name="arch" type="xml">
+            <list string="Tài sản" sample="1" decoration-muted="state == 'close'">
+                <field name="name"/>
+                <field name="asset_type"/>
+                <field name="acquisition_date"/>
+                <field name="method_number" string="Số kỳ"/>
+                <field name="original_value" sum="Tổng"/>
+                <field name="depreciated_value" sum="Tổng"/>
+                <field name="book_value" sum="Tổng"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'open'" decoration-info="state == 'draft'"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="account_asset_view_form" model="ir.ui.view">
+        <field name="name">account.asset.view.form</field>
+        <field name="model">account.asset</field>
+        <field name="arch" type="xml">
+            <form string="Tài sản">
+                <header>
+                    <button name="action_validate" type="object" string="Xác nhận"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_set_to_draft" type="object" string="Đưa về nháp"
+                            invisible="state not in ('open', 'cancel')"/>
+                    <button name="action_close" type="object" string="Kết thúc"
+                            invisible="state != 'open'"/>
+                    <button name="action_cancel" type="object" string="Huỷ"
+                            invisible="state in ('draft', 'cancel')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,open,close"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_moves" type="object" class="oe_stat_button"
+                                icon="fa-book" invisible="state == 'draft'">
+                            <span class="o_stat_text">Bút toán</span>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Đã kết thúc" bg_color="text-bg-secondary"
+                            invisible="state != 'close'"/>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="VD: Xe tải giao hàng"/></h1>
+                    </div>
+                    <group>
+                        <group string="Giá trị">
+                            <field name="asset_type" widget="radio" readonly="state != 'draft'"/>
+                            <field name="original_value" readonly="state != 'draft'"/>
+                            <field name="salvage_value" readonly="state != 'draft'"/>
+                            <field name="total_depreciable"/>
+                            <field name="depreciated_value"/>
+                            <field name="book_value"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="Khấu hao">
+                            <field name="acquisition_date" readonly="state != 'draft'"/>
+                            <field name="method_number" readonly="state != 'draft'"/>
+                            <field name="method_period" widget="radio" readonly="state != 'draft'"/>
+                            <field name="partner_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <group string="Tài khoản">
+                        <group>
+                            <field name="account_asset_id" readonly="state != 'draft'"/>
+                            <field name="account_depreciation_id" readonly="state != 'draft'"/>
+                        </group>
+                        <group>
+                            <field name="account_expense_id" readonly="state != 'draft'"/>
+                            <field name="journal_id" readonly="state != 'draft'"/>
+                        </group>
+                    </group>
+                    <notebook invisible="state == 'draft'">
+                        <page string="Bảng khấu hao" name="board">
+                            <field name="depreciation_move_ids" readonly="1">
+                                <list decoration-muted="state == 'draft'">
+                                    <field name="date"/>
+                                    <field name="ref"/>
+                                    <field name="amount_total" string="Giá trị khấu hao"/>
+                                    <field name="state" widget="badge"
+                                           decoration-success="state == 'posted'"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="account_asset_view_search" model="ir.ui.view">
+        <field name="name">account.asset.view.search</field>
+        <field name="model">account.asset</field>
+        <field name="arch" type="xml">
+            <search string="Tài sản">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <filter string="Tài sản cố định" name="purchase" domain="[('asset_type', '=', 'purchase')]"/>
+                <filter string="Chi phí trả trước" name="expense" domain="[('asset_type', '=', 'expense')]"/>
+                <separator/>
+                <filter string="Đang khấu hao" name="open" domain="[('state', '=', 'open')]"/>
+                <filter string="Nháp" name="draft" domain="[('state', '=', 'draft')]"/>
+                <separator/>
+                <filter string="Đã lưu trữ" name="inactive" domain="[('active', '=', False)]"/>
+                <group>
+                    <filter string="Loại" name="group_type" context="{'group_by': 'asset_type'}"/>
+                    <filter string="Trạng thái" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="Ngày sử dụng" name="group_date" context="{'group_by': 'acquisition_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_account_asset" model="ir.actions.act_window">
+        <field name="name">Tài sản cố định</field>
+        <field name="res_model">account.asset</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="account_asset_view_search"/>
+        <field name="context">{'search_default_purchase': 1, 'default_asset_type': 'purchase'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Tạo tài sản cố định đầu tiên</p>
+            <p>Xác nhận tài sản để sinh bảng khấu hao; bút toán mỗi kỳ sẽ tự vào sổ khi đến hạn.</p>
+        </field>
+    </record>
+
+    <record id="action_account_deferred_expense" model="ir.actions.act_window">
+        <field name="name">Chi phí trả trước</field>
+        <field name="res_model">account.asset</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="account_asset_view_search"/>
+        <field name="context">{'search_default_expense': 1, 'default_asset_type': 'expense'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Tạo khoản chi phí trả trước đầu tiên</p>
+            <p>Dùng để phân bổ dần chi phí đã trả một lần, ví dụ tiền thuê nhà trả trước cả năm.</p>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- AutoQA chấm ticket đã đóng. TẮT sẵn — bật khi muốn AI chấm tự động
+         (nút "Chấm QA" trên ticket luôn dùng được để thử). -->
+    <record id="ir_cron_autoqa" model="ir.cron">
+        <field name="name">CSKH: AutoQA ticket đã đóng</field>
+        <field name="model_id" ref="model_vct_cs_qa_score"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_autoqa()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="nextcall" eval="(DateTime.now() + relativedelta(days=1))"/>
+        <field name="active" eval="False"/>
+    </record>
+</odoo>

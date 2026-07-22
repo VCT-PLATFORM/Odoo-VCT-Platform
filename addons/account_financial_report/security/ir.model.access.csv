@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_account_financial_report,account.financial.report,model_account_financial_report,account.group_account_readonly,1,1,1,1
+access_account_financial_report_line,account.financial.report.line,model_account_financial_report_line,account.group_account_readonly,1,1,1,1
+access_account_aged_report,account.aged.report,model_account_aged_report,account.group_account_readonly,1,1,1,1
+access_account_aged_report_line,account.aged.report.line,model_account_aged_report_line,account.group_account_readonly,1,1,1,1

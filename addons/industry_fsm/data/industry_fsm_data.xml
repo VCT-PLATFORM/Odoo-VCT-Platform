@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="fsm_project" model="project.project">
+        <field name="name">Dịch vụ hiện trường</field>
+        <field name="is_fsm" eval="True"/>
+        <field name="allow_timesheets" eval="True"/>
+    </record>
+
+</odoo>

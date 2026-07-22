@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_timesheet_line_tree_validation" model="ir.ui.view">
+        <field name="name">account.analytic.line.tree.validation</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
+        <field name="arch" type="xml">
+            <list position="attributes">
+                <attribute name="decoration-muted">validated</attribute>
+            </list>
+            <xpath expr="//list" position="inside">
+                <field name="validated" widget="boolean_toggle" readonly="1" optional="show"/>
+                <field name="validated_by_id" optional="hide"/>
+                <field name="validated_date" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_timesheet_line_search_validation" model="ir.ui.view">
+        <field name="name">account.analytic.line.search.validation</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_search"/>
+        <field name="arch" type="xml">
+            <search position="inside">
+                <separator/>
+                <filter string="Chờ duyệt" name="to_validate" domain="[('validated', '=', False)]"/>
+                <filter string="Đã duyệt" name="validated" domain="[('validated', '=', True)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_validate_timesheet" model="ir.actions.server">
+        <field name="name">Duyệt chấm công</field>
+        <field name="model_id" ref="analytic.model_account_analytic_line"/>
+        <field name="binding_model_id" ref="analytic.model_account_analytic_line"/>
+        <field name="binding_view_types">list</field>
+        <field name="group_ids" eval="[(4, ref('hr_timesheet.group_hr_timesheet_approver'))]"/>
+        <field name="state">code</field>
+        <field name="code">records.action_validate()</field>
+    </record>
+
+    <record id="action_invalidate_timesheet" model="ir.actions.server">
+        <field name="name">Bỏ duyệt chấm công</field>
+        <field name="model_id" ref="analytic.model_account_analytic_line"/>
+        <field name="binding_model_id" ref="analytic.model_account_analytic_line"/>
+        <field name="binding_view_types">list</field>
+        <field name="group_ids" eval="[(4, ref('hr_timesheet.group_hr_timesheet_approver'))]"/>
+        <field name="state">code</field>
+        <field name="code">records.action_invalidate()</field>
+    </record>
+
+</odoo>

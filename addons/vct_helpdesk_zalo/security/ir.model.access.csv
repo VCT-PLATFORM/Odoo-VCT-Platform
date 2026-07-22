@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_vct_zalo_account_user,vct.zalo.account user,model_vct_zalo_account,helpdesk.group_helpdesk_user,1,0,0,0
+access_vct_zalo_account_manager,vct.zalo.account manager,model_vct_zalo_account,helpdesk.group_helpdesk_manager,1,1,1,1
+access_vct_zalo_conversation_user,vct.zalo.conversation user,model_vct_zalo_conversation,helpdesk.group_helpdesk_user,1,1,1,0
+access_vct_zalo_conversation_manager,vct.zalo.conversation manager,model_vct_zalo_conversation,helpdesk.group_helpdesk_manager,1,1,1,1

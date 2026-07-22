@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Drop the upgrade_boolean widget: these two reminders are implemented in
+         this module, so the switches must actually switch something rather than
+         advertise Enterprise. -->
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.timesheet.grid</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="70"/>
+        <field name="inherit_id" ref="hr_timesheet.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <field name="reminder_user_allow" position="attributes">
+                <attribute name="widget"/>
+            </field>
+            <field name="reminder_allow" position="attributes">
+                <attribute name="widget"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

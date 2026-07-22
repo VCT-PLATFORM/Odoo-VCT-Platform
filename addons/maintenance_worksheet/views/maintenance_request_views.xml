@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Inherit Maintenance Request Form View -->
+        <record id="hr_equipment_request_view_form_inherit_worksheet" model="ir.ui.view">
+            <field name="name">maintenance.request.view.form.inherit.worksheet</field>
+            <field name="model">maintenance.request</field>
+            <field name="inherit_id" ref="maintenance.hr_equipment_request_view_form"/>
+            <field name="arch" type="xml">
+                <!-- Add Smart Button inside sheet at the top -->
+                <xpath expr="//sheet/div[@class='oe_title']" position="before">
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_worksheet"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-list-alt"
+                                invisible="not worksheet_template_id">
+                            <field name="worksheet_count" widget="statinfo" string="Bảng công tác"/>
+                        </button>
+                    </div>
+                </xpath>
+
+                <!-- Add Worksheet Template field under maintenance type -->
+                <xpath expr="//field[@name='maintenance_type']" position="after">
+                    <field name="worksheet_template_id" options="{'no_create': True, 'no_open': False}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Inherit res.config.settings form view to remove Enterprise upgrade widget from maintenance worksheet -->
+        <record id="res_config_settings_view_form_inherit_maintenance_worksheet" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.maintenance.worksheet</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="maintenance.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='module_maintenance_worksheet']" position="attributes">
+                    <attribute name="widget">boolean</attribute>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

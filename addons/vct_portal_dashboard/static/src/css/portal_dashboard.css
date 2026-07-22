@@ -1,0 +1,94 @@
+/* Written for VCT Platform. Not part of Odoo S.A. */
+/* Portal home as a clean app launcher, matched to the Odoo backend app drawer. */
+/* Fully local: real installed-app icons, no trial/subscription references. */
+
+/* Strip the website marketing chrome (shop nav, cart, demo footer) on this page
+   only — the launcher is an app home, not a storefront. */
+body:has(.vct_launcher) > header,
+body:has(.vct_launcher) header#top,
+body:has(.vct_launcher) > footer,
+body:has(.vct_launcher) footer#bottom,
+body:has(.vct_launcher) .o_footer,
+/* Odoo's corner "back to backend" tab: redundant here, every tile opens an app */
+body:has(.vct_launcher) .o_frontend_to_backend_nav {
+    display: none !important;
+}
+body:has(.vct_launcher) { background: #EAEAEC; }
+/* let the launcher use the full viewport width instead of the bootstrap container */
+body:has(.vct_launcher) #wrap.o_portal_wrap > .container {
+    max-width: 100% !important;
+    padding: 0 !important;
+}
+body:has(.vct_launcher) #wrap,
+body:has(.vct_launcher) main { padding: 0 !important; margin: 0 !important; }
+
+.vct_launcher {
+    min-height: 100vh;
+    padding: 14px 26px 60px;
+    background: #EAEAEC;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Helvetica, Arial, sans-serif;
+}
+.vct_launcher * { box-sizing: border-box; }
+
+/* Minimal top bar: identity on the right, nothing else */
+.vct_lc_topbar {
+    display: flex; align-items: center; justify-content: flex-end;
+    gap: 14px; height: 40px; margin-bottom: 34px;
+}
+.vct_lc_company {
+    font-size: 13px; font-weight: 600; color: #55555F;
+    letter-spacing: .4px; text-transform: uppercase;
+}
+.vct_lc_logout {
+    font-size: 12.5px; color: #8A8A94; text-decoration: none;
+}
+.vct_lc_logout:hover { color: #4C1D95; text-decoration: underline; }
+.vct_lc_avatar {
+    width: 30px; height: 30px; border-radius: 8px;
+    background: #6D28D9; color: #fff;
+    font-size: 13px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+}
+
+/* App grid — small tiles, tight rhythm, like the app drawer */
+.vct_lc_grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+    gap: 30px 8px;
+    max-width: 880px;
+    margin: 0 auto;
+}
+.vct_lc_app {
+    display: flex; flex-direction: column; align-items: center; gap: 9px;
+    text-decoration: none !important; color: inherit;
+}
+.vct_lc_tile {
+    width: 60px; height: 60px; border-radius: 11px;
+    background: #fff;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 1px 3px rgba(20, 18, 40, .10);
+    transition: transform .15s ease, box-shadow .15s ease;
+}
+.vct_lc_tile img { width: 42px; height: 42px; object-fit: contain; }
+/* Fallback when a module ships no icon: show its initial, never a broken image */
+.vct_lc_tile:not(:has(img))::before {
+    content: attr(data-ini);
+    font-size: 24px; font-weight: 600; color: #6D28D9;
+}
+.vct_lc_app:hover .vct_lc_tile {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(20, 18, 40, .16);
+}
+.vct_lc_name {
+    font-size: 12.5px; font-weight: 400; color: #45454F;
+    text-align: center; line-height: 1.3;
+}
+.vct_lc_app:hover .vct_lc_name { color: #4C1D95; }
+
+@media (max-width: 575px) {
+    .vct_launcher { padding: 12px 14px 44px; }
+    .vct_lc_grid { grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 24px 6px; }
+    .vct_lc_tile { width: 54px; height: 54px; border-radius: 10px; }
+    .vct_lc_tile img { width: 38px; height: 38px; }
+    .vct_lc_name { font-size: 11.5px; }
+}

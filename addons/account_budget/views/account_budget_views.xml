@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Budgetary Positions Views -->
+        <record id="view_budget_post_search" model="ir.ui.view">
+            <field name="name">account.budget.post.search</field>
+            <field name="model">account.budget.post</field>
+            <field name="arch" type="xml">
+                <search string="Tìm kiếm Vị trí ngân sách">
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_budget_post_tree" model="ir.ui.view">
+            <field name="name">account.budget.post.tree</field>
+            <field name="model">account.budget.post</field>
+            <field name="arch" type="xml">
+                <list string="Vị trí ngân sách">
+                    <field name="name"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_budget_post_form" model="ir.ui.view">
+            <field name="name">account.budget.post.form</field>
+            <field name="model">account.budget.post</field>
+            <field name="arch" type="xml">
+                <form string="Vị trí ngân sách">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" placeholder="Ví dụ: Chi phí vận hành"/>
+                            </group>
+                            <group>
+                                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Tài khoản kế toán" name="accounts">
+                                <field name="account_ids">
+                                    <list>
+                                        <field name="code"/>
+                                        <field name="name"/>
+                                        <field name="account_type"/>
+                                    </list>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="open_budget_post_form" model="ir.actions.act_window">
+            <field name="name">Vị trí ngân sách</field>
+            <field name="res_model">account.budget.post</field>
+            <field name="view_mode">list,form</field>
+            <field name="view_id" ref="view_budget_post_tree"/>
+            <field name="search_view_id" ref="view_budget_post_search"/>
+        </record>
+
+
+        <!-- Budget Lines Views -->
+        <record id="view_crossovered_budget_line_tree" model="ir.ui.view">
+            <field name="name">crossovered.budget.lines.tree</field>
+            <field name="model">crossovered.budget.lines</field>
+            <field name="arch" type="xml">
+                <list string="Dòng ngân sách">
+                    <field name="crossovered_budget_id"/>
+                    <field name="general_budget_id"/>
+                    <field name="analytic_account_id"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="planned_amount" sum="Tổng dự kiến"/>
+                    <field name="practical_amount" sum="Tổng thực tế"/>
+                    <field name="theoritical_amount" sum="Tổng lý thuyết"/>
+                    <field name="percentage"/>
+                </list>
+            </field>
+        </record>
+
+
+        <!-- Budget Views -->
+        <record id="view_crossovered_budget_search" model="ir.ui.view">
+            <field name="name">crossovered.budget.search</field>
+            <field name="model">crossovered.budget</field>
+            <field name="arch" type="xml">
+                <search string="Tìm kiếm ngân sách">
+                    <field name="name"/>
+                    <filter string="Nháp" name="draft" domain="[('state','=','draft')]"/>
+                    <filter string="Đã xác nhận" name="confirm" domain="[('state','=','confirm')]"/>
+                    <filter string="Đang chạy" name="validate" domain="[('state','=','validate')]"/>
+                    <group>
+                        <filter string="Người phụ trách" name="user" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Trạng thái" name="status" domain="[]" context="{'group_by':'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_crossovered_budget_tree" model="ir.ui.view">
+            <field name="name">crossovered.budget.tree</field>
+            <field name="model">crossovered.budget</field>
+            <field name="arch" type="xml">
+                <list string="Ngân sách">
+                    <field name="name"/>
+                    <field name="user_id"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'confirm'" decoration-success="state == 'validate'"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_crossovered_budget_form" model="ir.ui.view">
+            <field name="name">crossovered.budget.form</field>
+            <field name="model">crossovered.budget</field>
+            <field name="arch" type="xml">
+                <form string="Ngân sách">
+                    <header>
+                        <button string="Xác nhận" name="action_confirm" type="object" class="oe_highlight" invisible="state != 'draft'"/>
+                        <button string="Phê duyệt" name="action_approve" type="object" class="oe_highlight" invisible="state != 'confirm'"/>
+                        <button string="Hoàn thành" name="action_done" type="object" class="oe_highlight" invisible="state != 'validate'"/>
+                        <button string="Đặt lại nháp" name="action_draft" type="object" invisible="state not in ('confirm', 'cancel')"/>
+                        <button string="Hủy bỏ" name="action_cancel" type="object" invisible="state not in ('draft', 'confirm', 'validate')"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate,done"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" string="Tên ngân sách"/>
+                            <h1>
+                                <field name="name" placeholder="Ví dụ: Ngân sách vận hành 2026" readonly="state != 'draft'"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="user_id" readonly="state != 'draft'"/>
+                                <field name="company_id" groups="base.group_multi_company" readonly="state != 'draft'" options="{'no_create': True}"/>
+                            </group>
+                            <group>
+                                <label for="date_from" string="Thời gian"/>
+                                <div class="o_row">
+                                    <field name="date_from" class="oe_inline" readonly="state != 'draft'"/>
+                                    <span class="o_side_by_side_to">đến</span>
+                                    <field name="date_to" class="oe_inline" readonly="state != 'draft'"/>
+                                </div>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Chi tiết ngân sách" name="lines">
+                                <field name="crossovered_budget_line" readonly="state not in ('draft', 'confirm')">
+                                    <list editable="bottom">
+                                        <field name="general_budget_id"/>
+                                        <field name="analytic_account_id"/>
+                                        <field name="date_from"/>
+                                        <field name="date_to"/>
+                                        <field name="planned_amount" sum="Tổng dự kiến"/>
+                                        <field name="practical_amount" sum="Tổng thực tế" readonly="1"/>
+                                        <field name="theoritical_amount" sum="Tổng lý thuyết" readonly="1"/>
+                                        <field name="percentage" widget="progressbar"/>
+                                    </list>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="act_crossovered_budget_view" model="ir.actions.act_window">
+            <field name="name">Ngân sách</field>
+            <field name="res_model">crossovered.budget</field>
+            <field name="view_mode">list,form</field>
+            <field name="view_id" ref="view_crossovered_budget_tree"/>
+            <field name="search_view_id" ref="view_crossovered_budget_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Tạo ngân sách mới
+                </p>
+                <p>
+                    Ngân sách giúp bạn so sánh số tiền dự kiến chi tiêu hoặc thu về so với thực tế phát sinh trên sổ sách kế toán.
+                </p>
+            </field>
+        </record>
+
+        <!-- Menu Items -->
+        <menuitem id="menu_act_crossovered_budget_view"
+                  name="Ngân sách"
+                  parent="account.menu_finance_entries"
+                  sequence="60"
+                  action="act_crossovered_budget_view"/>
+
+        <menuitem id="menu_act_budget_post_config"
+                  name="Vị trí ngân sách"
+                  parent="account.menu_finance_configuration"
+                  sequence="35"
+                  action="open_budget_post_form"/>
+
+        <!-- Inherit res.config.settings form view to remove Enterprise upgrade widgets -->
+        <record id="res_config_settings_view_form_inherit_budget_qif_reports" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.budget.qif.reports</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='module_account_budget']" position="attributes">
+                    <attribute name="widget">boolean</attribute>
+                </xpath>
+                <xpath expr="//field[@name='module_account_reports']" position="attributes">
+                    <attribute name="widget">boolean</attribute>
+                </xpath>
+                <xpath expr="//field[@name='module_account_bank_statement_import_qif']" position="attributes">
+                    <attribute name="widget">boolean</attribute>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

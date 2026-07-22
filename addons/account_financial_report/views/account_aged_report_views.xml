@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_aged_report_line_view_list" model="ir.ui.view">
+        <field name="name">account.aged.report.line.view.list</field>
+        <field name="model">account.aged.report.line</field>
+        <field name="arch" type="xml">
+            <list create="0" delete="0" edit="0" limit="200">
+                <field name="currency_id" column_invisible="1"/>
+                <field name="partner_id" string="Đối tác"/>
+                <field name="amount_not_due" sum="Tổng"/>
+                <field name="amount_1_30" sum="Tổng"/>
+                <field name="amount_31_60" sum="Tổng"/>
+                <field name="amount_61_90" sum="Tổng"/>
+                <field name="amount_91_120" sum="Tổng"/>
+                <field name="amount_over_120" sum="Tổng" decoration-danger="amount_over_120 &gt; 0"/>
+                <field name="total" sum="Tổng" class="fw-bold"/>
+                <button name="action_open_items" type="object" icon="fa-search"
+                        title="Xem chi tiết công nợ"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="account_aged_report_view_form" model="ir.ui.view">
+        <field name="name">account.aged.report.view.form</field>
+        <field name="model">account.aged.report</field>
+        <field name="arch" type="xml">
+            <form string="Công nợ theo tuổi nợ" create="0">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="report_type" readonly="1" nolabel="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date_to"/>
+                            <field name="target_move" widget="radio"/>
+                        </group>
+                        <group>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <div class="text-muted mb-2">
+                        Số ngày quá hạn tính từ ngày đến hạn thanh toán. Khoản chưa tới hạn
+                        nằm riêng một cột, không bị xếp vào nhóm 1-30 ngày.
+                    </div>
+                    <field name="line_ids" nolabel="1" readonly="1"
+                           context="{'list_view_ref': 'account_financial_report.account_aged_report_line_view_list'}"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_aged_receivable" model="ir.actions.act_window">
+        <field name="name">Công nợ phải thu theo tuổi nợ</field>
+        <field name="res_model">account.aged.report</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="account_aged_report_view_form"/>
+        <field name="target">current</field>
+        <field name="context">{'default_report_type': 'receivable'}</field>
+    </record>
+
+    <record id="action_aged_payable" model="ir.actions.act_window">
+        <field name="name">Công nợ phải trả theo tuổi nợ</field>
+        <field name="res_model">account.aged.report</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="account_aged_report_view_form"/>
+        <field name="target">current</field>
+        <field name="context">{'default_report_type': 'payable'}</field>
+    </record>
+
+    <menuitem id="menu_aged_receivable" action="action_aged_receivable"
+        parent="account.account_reports_partners_reports_menu" sequence="1"
+        groups="account.group_account_readonly"/>
+    <menuitem id="menu_aged_payable" action="action_aged_payable"
+        parent="account.account_reports_partners_reports_menu" sequence="2"
+        groups="account.group_account_readonly"/>
+
+</odoo>

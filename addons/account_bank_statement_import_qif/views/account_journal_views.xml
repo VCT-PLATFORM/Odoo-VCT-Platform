@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Inherit Bank Statement List View to add Import button in header -->
+        <record id="view_bank_statement_tree_inherit_qif" model="ir.ui.view">
+            <field name="name">account.bank.statement.list.inherit.qif</field>
+            <field name="model">account.bank.statement</field>
+            <field name="inherit_id" ref="account.view_bank_statement_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//list" position="inside">
+                    <header>
+                        <button name="%(action_account_bank_statement_import_qif)d" string="Nhập tệp QIF" type="action" class="btn-primary"/>
+                    </header>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Menu Item in Transactions -->
+        <menuitem id="menu_account_bank_statement_import_qif"
+                  name="Nhập tệp QIF"
+                  parent="account.account_transactions_menu"
+                  sequence="10"
+                  action="action_account_bank_statement_import_qif"/>
+
+    </data>
+</odoo>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!-- Rename OdooBot to Trợ lý AI -->
+        <record id="base.partner_root" model="res.partner">
+            <field name="name">Trợ lý AI</field>
+            <field name="email">assistant.ai@vctplatform.com</field>
+        </record>
+    </data>
+</odoo>

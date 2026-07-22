@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.planning</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="64"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Kế hoạch" string="Kế hoạch" name="planning"
+                     groups="planning.group_planning_manager">
+                    <block title="Ca làm việc">
+                        <setting string="Vai trò"
+                                 help="Vai trò giúp phân màu và nhóm ca, ví dụ Thu ngân, Kỹ thuật, Trực đêm.">
+                            <button name="%(planning.planning_role_action)d" type="action"
+                                    string="Vai trò" class="btn-link" icon="oi-arrow-right"/>
+                        </setting>
+                        <setting string="Ca chưa phân công"
+                                 help="Ca để trống nhân viên sẽ hiện cho mọi người nhận. Nhân viên chỉ thấy ca đã công bố và ca mở.">
+                            <button name="%(planning.planning_slot_action_open)d" type="action"
+                                    string="Ca chưa phân công" class="btn-link" icon="oi-arrow-right"/>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_planning_configuration" model="ir.actions.act_window">
+        <field name="name">Cài đặt</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'module': 'planning'}</field>
+    </record>
+
+    <menuitem id="menu_planning_settings" name="Cài đặt" parent="menu_planning_config"
+        sequence="0" action="action_planning_configuration" groups="base.group_system"/>
+
+</odoo>

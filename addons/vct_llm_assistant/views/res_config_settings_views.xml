@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit General Settings view -->
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.vct_llm</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='general_settings']" position="inside">
+                <block title="AI Assistant (LLM) Integration" id="vct_llm_settings_block">
+                    <setting id="vct_llm_mode_setting" string="Routing Mode (Chế độ điều hướng)" help="Tự động chọn Local cho tác vụ thường và Cloud AI cho tác vụ báo cáo/phức tạp">
+                        <field name="vct_llm_mode"/>
+                    </setting>
+                    <setting id="vct_llm_api_url_setting" string="Local LLM API URL" help="URL API máy chủ Local/Ollama (e.g. http://192.168.12.44:11434/v1/chat/completions)">
+                        <field name="vct_llm_api_url"/>
+                    </setting>
+                    <setting id="vct_llm_api_key_setting" string="Local LLM API Key" help="API Key Local (để trống nếu dùng Ollama)">
+                        <field name="vct_llm_api_key" password="True"/>
+                    </setting>
+                    <setting id="vct_llm_fetch_models_setting" string="Quét Mô hình LLM" help="Tự động quét các model đang có trên server">
+                        <button name="action_fetch_models" string="Scan &amp; Fetch Models" type="object" class="btn-primary o_btn_fetch_models mb-2"/>
+                        <field name="vct_llm_model_selection" placeholder="Select a scanned model..."/>
+                    </setting>
+                    <setting id="vct_llm_model_name_setting" string="Local Model Name" help="Mô hình Local đang dùng (e.g. qwen3-fast:latest)">
+                        <field name="vct_llm_model_name"/>
+                    </setting>
+                    <setting id="vct_llm_cloud_url_setting" string="Cloud LLM API URL" help="URL API của Cloud AI (OpenAI / DeepSeek / Anthropic...)">
+                        <field name="vct_llm_cloud_url"/>
+                    </setting>
+                    <setting id="vct_llm_cloud_key_setting" string="Cloud LLM API Key" help="API Key của dịch vụ Cloud AI">
+                        <field name="vct_llm_cloud_key" password="True"/>
+                    </setting>
+                    <setting id="vct_llm_cloud_model_setting" string="Cloud Model Name" help="Mô hình Cloud AI dùng khi tác vụ phức tạp (e.g. gpt-4o-mini, deepseek-chat)">
+                        <field name="vct_llm_cloud_model"/>
+                    </setting>
+                    <setting id="vct_llm_system_prompt_setting" string="System Prompt" help="Chỉ thị gốc cho Trợ lý AI">
+                        <field name="vct_llm_system_prompt"/>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Dedicated Form view containing ONLY LLM fields -->
+    <record id="vct_llm_config_view_form" model="ir.ui.view">
+        <field name="name">vct.llm.config.view.form</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="99"/>
+        <field name="arch" type="xml">
+            <form string="LLM Configuration" class="oe_form_configuration">
+                <header>
+                    <button string="Save" type="object" name="execute" class="oe_highlight" />
+                    <button string="Discard" type="object" name="cancel" class="special" />
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>AI Assistant Configuration</h1>
+                    </div>
+                    <div class="o_settings_container mt16">
+                        <div class="row o_settings_container">
+                            <setting id="vct_llm_mode_setting_dedicated" string="Routing Mode" help="Auto-Hybrid chọn Local cho đơn giản, Cloud AI cho phức tạp">
+                                <field name="vct_llm_mode"/>
+                            </setting>
+                            <setting id="vct_llm_api_url_setting_dedicated" string="Local LLM API URL" help="Local Ollama/vLLM URL (e.g. http://192.168.12.44:11434/v1/chat/completions)">
+                                <field name="vct_llm_api_url"/>
+                            </setting>
+                            <setting id="vct_llm_api_key_setting_dedicated" string="Local LLM API Key" help="API key for local endpoint if required">
+                                <field name="vct_llm_api_key" password="True"/>
+                            </setting>
+                            <setting id="vct_llm_fetch_models_setting_dedicated" string="Quét Mô hình" help="Scan &amp; Fetch Models from LLM provider">
+                                <button name="action_fetch_models" string="Scan &amp; Fetch Models" type="object" class="btn-primary mb-2"/>
+                                <field name="vct_llm_model_selection" placeholder="Select a scanned model..."/>
+                            </setting>
+                            <setting id="vct_llm_model_name_setting_dedicated" string="Local Model Name" help="The local active model">
+                                <field name="vct_llm_model_name"/>
+                            </setting>
+                            <setting id="vct_llm_cloud_url_setting_dedicated" string="Cloud LLM API URL" help="Cloud AI endpoint URL">
+                                <field name="vct_llm_cloud_url"/>
+                            </setting>
+                            <setting id="vct_llm_cloud_key_setting_dedicated" string="Cloud LLM API Key" help="API Key for Cloud AI provider">
+                                <field name="vct_llm_cloud_key" password="True"/>
+                            </setting>
+                            <setting id="vct_llm_cloud_model_setting_dedicated" string="Cloud Model Name" help="Cloud Model (e.g. gpt-4o-mini, deepseek-chat)">
+                                <field name="vct_llm_cloud_model"/>
+                            </setting>
+                            <setting id="vct_llm_system_prompt_setting_dedicated" string="System Prompt" help="Primary instruction for the assistant's personality and rules">
+                                <field name="vct_llm_system_prompt"/>
+                            </setting>
+                            <setting id="vct_llm_system_prompt_setting_dedicated" string="System Prompt" help="Primary instruction for the assistant's personality and rules">
+                                <field name="vct_llm_system_prompt"/>
+                            </setting>
+                        </div>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action to open the dedicated settings form -->
+    <record id="action_vct_llm_config_settings" model="ir.actions.act_window">
+        <field name="name">LLM Configuration</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+        <field name="view_id" ref="vct_llm_config_view_form"/>
+    </record>
+
+    <!-- Root Menu Item -->
+    <menuitem id="menu_vct_llm_root" name="AI Assistant" sequence="100"
+              web_icon="vct_llm_assistant,static/description/icon.png"/>
+
+    <!-- Submenu item pointing to the configuration action -->
+    <menuitem id="menu_vct_llm_config" name="Configuration" parent="menu_vct_llm_root" action="action_vct_llm_config_settings" sequence="20"/>
+</odoo>

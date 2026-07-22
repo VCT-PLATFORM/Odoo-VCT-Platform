@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- account already ships the "Accounting" section, unlocked for accountants -->
+    <menuitem id="menu_account_asset" action="action_account_asset"
+        parent="account.menu_finance_entries" sequence="15"
+        groups="account.group_account_readonly"/>
+    <menuitem id="menu_account_deferred_expense" action="action_account_deferred_expense"
+        parent="account.menu_finance_entries" sequence="16"
+        groups="account.group_account_readonly"/>
+
+</odoo>

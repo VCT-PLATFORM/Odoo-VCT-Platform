@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="menu_ai_workflow_root" name="Tự động hoá AI" sequence="97"
+        web_icon="vct_ai_workflow,static/description/icon.png"
+        groups="base.group_system"/>
+
+    <menuitem id="menu_ai_workflow" name="Workflow AI"
+        parent="menu_ai_workflow_root" action="action_ai_workflow" sequence="10"/>
+
+    <menuitem id="menu_ai_workflow_rules" name="Quy tắc tự động (trigger)"
+        parent="menu_ai_workflow_root" action="base_automation.base_automation_act"
+        sequence="20"/>
+
+    <menuitem id="menu_ai_workflow_log" name="Nhật ký thực thi"
+        parent="menu_ai_workflow_root" action="action_ai_workflow_log" sequence="30"/>
+
+</odoo>

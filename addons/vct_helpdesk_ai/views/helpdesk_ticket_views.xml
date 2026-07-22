@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="helpdesk_ticket_view_form_ai_copilot" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.form.ai.copilot</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_ai_suggest_reply" type="object" string="🤖 Gợi ý trả lời"/>
+                <button name="action_ai_summarize" type="object" string="🤖 Tóm tắt"/>
+                <button name="action_ai_rewrite" type="object" string="🤖 Viết lại"/>
+                <button name="action_run_qa" type="object" string="Chấm QA"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

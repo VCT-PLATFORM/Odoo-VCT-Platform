@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_maintenance_worksheet_template_user,maintenance.worksheet.template.user,model_maintenance_worksheet_template,base.group_user,1,0,0,0
+access_maintenance_worksheet_template_manager,maintenance.worksheet.template.manager,model_maintenance_worksheet_template,maintenance.group_equipment_manager,1,1,1,1
+access_worksheet_template_line_user,worksheet.template.line.user,model_worksheet_template_line,base.group_user,1,0,0,0
+access_worksheet_template_line_manager,worksheet.template.line.manager,model_worksheet_template_line,maintenance.group_equipment_manager,1,1,1,1
+access_worksheet_template_line_option_user,worksheet.template.line.option.user,model_worksheet_template_line_option,base.group_user,1,0,0,0
+access_worksheet_template_line_option_manager,worksheet.template.line.option.manager,model_worksheet_template_line_option,maintenance.group_equipment_manager,1,1,1,1
+access_maintenance_worksheet_user,maintenance.worksheet.user,model_maintenance_worksheet,base.group_user,1,1,1,1
+access_maintenance_worksheet_line_user,maintenance.worksheet.line.user,model_maintenance_worksheet_line,base.group_user,1,1,1,1

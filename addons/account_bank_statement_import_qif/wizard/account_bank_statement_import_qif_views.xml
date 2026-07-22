@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- QIF Import Form View -->
+        <record id="account_bank_statement_import_qif_view_form" model="ir.ui.view">
+            <field name="name">account.bank.statement.import.qif.view.form</field>
+            <field name="model">account.bank.statement.import.qif</field>
+            <field name="arch" type="xml">
+                <form string="Nhập tệp sao kê QIF">
+                    <group>
+                        <group>
+                            <field name="file_name" invisible="1"/>
+                            <field name="file_data" filename="file_name" string="Tải lên tệp QIF"/>
+                        </group>
+                        <group>
+                            <field name="journal_id" options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="action_import" string="Nhập tệp" type="object" class="oe_highlight"/>
+                        <button string="Hủy" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- QIF Import Action -->
+        <record id="action_account_bank_statement_import_qif" model="ir.actions.act_window">
+            <field name="name">Nhập tệp QIF</field>
+            <field name="res_model">account.bank.statement.import.qif</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</odoo>

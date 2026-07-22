@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Fallback poll every 5 min; each incoming message _trigger()s it to run
+         near-immediately, so the agent replies without waiting for the poll. -->
+    <record id="ir_cron_vct_llm_process" model="ir.cron">
+        <field name="name">Trợ lý AI: xử lý hàng đợi</field>
+        <field name="model_id" ref="model_vct_llm_job"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_process_jobs()</field>
+        <field name="interval_number">5</field>
+        <field name="interval_type">minutes</field>
+        <field name="active" eval="True"/>
+    </record>
+</odoo>

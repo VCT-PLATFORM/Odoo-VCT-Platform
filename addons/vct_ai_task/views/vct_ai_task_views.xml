@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="vct_ai_task_view_list" model="ir.ui.view">
+        <field name="name">vct.ai.task.list</field>
+        <field name="model">vct.ai.task</field>
+        <field name="arch" type="xml">
+            <list string="Việc giao AI" decoration-success="state=='done'"
+                  decoration-danger="state=='failed'" decoration-muted="state=='draft'">
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="schedule_id" optional="hide"/>
+                <field name="use_tools" optional="show"/>
+                <field name="create_date" optional="show"/>
+                <field name="finished_at" optional="hide"/>
+                <field name="state" widget="badge"
+                       decoration-success="state=='done'" decoration-danger="state=='failed'"
+                       decoration-info="state in ('pending','running')"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="vct_ai_task_view_form" model="ir.ui.view">
+        <field name="name">vct.ai.task.form</field>
+        <field name="model">vct.ai.task</field>
+        <field name="arch" type="xml">
+            <form string="Việc giao AI">
+                <header>
+                    <button name="action_run" type="object" string="Giao cho AI"
+                            class="btn-primary" invisible="state in ('pending','running')"/>
+                    <button name="action_reset" type="object" string="Đặt lại"
+                            invisible="state == 'draft'"/>
+                    <button name="action_attach_result" type="object" string="Tải kết quả (.md)"
+                            invisible="not result"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,pending,running,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_attachments" type="object"
+                                class="oe_stat_button" icon="fa-paperclip"
+                                invisible="attachment_count == 0">
+                            <field name="attachment_count" widget="statinfo" string="Tệp"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Vd: Nhắc công nợ quá hạn"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="use_tools"/>
+                        </group>
+                        <group>
+                            <field name="schedule_id" invisible="not schedule_id"/>
+                            <field name="activity_id" invisible="not activity_id"/>
+                            <field name="started_at" invisible="not started_at"/>
+                            <field name="finished_at" invisible="not finished_at"/>
+                            <field name="res_model" invisible="not res_model"/>
+                            <field name="res_id" invisible="not res_id"/>
+                        </group>
+                    </group>
+                    <field name="instruction" placeholder="Mô tả việc cần AI làm, bằng lời..."
+                           readonly="state in ('pending','running')"/>
+                    <div class="alert alert-danger" role="alert" invisible="state != 'failed'">
+                        <field name="error" nolabel="1"/>
+                    </div>
+                    <separator string="Kết quả" invisible="not result"/>
+                    <field name="result_html" nolabel="1" readonly="1" invisible="not result"/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="vct_ai_task_view_search" model="ir.ui.view">
+        <field name="name">vct.ai.task.search</field>
+        <field name="model">vct.ai.task</field>
+        <field name="arch" type="xml">
+            <search string="Việc giao AI">
+                <field name="name"/>
+                <field name="instruction"/>
+                <field name="user_id"/>
+                <filter name="mine" string="Của tôi" domain="[('user_id','=',uid)]"/>
+                <separator/>
+                <filter name="pending" string="Chờ/Đang làm" domain="[('state','in',('pending','running'))]"/>
+                <filter name="done" string="Xong" domain="[('state','=','done')]"/>
+                <filter name="failed" string="Lỗi" domain="[('state','=','failed')]"/>
+                <group>
+                    <filter name="group_state" string="Trạng thái" context="{'group_by':'state'}"/>
+                    <filter name="group_user" string="Người giao" context="{'group_by':'user_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_vct_ai_task" model="ir.actions.act_window">
+        <field name="name">Việc giao AI</field>
+        <field name="res_model">vct.ai.task</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_mine': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Giao việc đầu tiên cho Trợ lý AI</p>
+            <p>Mô tả việc bằng lời, bấm "Giao cho AI" — trợ lý tự làm trong nền và trả kết quả tại đây.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_vct_ai_task_root" name="Trợ lý AI" sequence="98"
+        web_icon="vct_llm_assistant,static/description/icon.png"/>
+    <menuitem id="menu_vct_ai_task" name="Việc giao AI"
+        parent="menu_vct_ai_task_root" action="action_vct_ai_task" sequence="10"/>
+
+</odoo>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="knowledge_article_view_list" model="ir.ui.view">
+        <field name="name">knowledge.article.view.list</field>
+        <field name="model">knowledge.article</field>
+        <field name="arch" type="xml">
+            <list string="Bài viết" sample="1">
+                <field name="is_favorite" widget="boolean_favorite" nolabel="1" width="30px"/>
+                <field name="icon" width="40px" string=""/>
+                <field name="complete_name" string="Bài viết"/>
+                <field name="child_count" string="Bài con" optional="show"/>
+                <field name="inherited_permission" string="Quyền" optional="show"/>
+                <field name="create_uid" string="Tác giả" optional="hide"/>
+                <field name="write_date" string="Cập nhật" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="knowledge_article_view_form" model="ir.ui.view">
+        <field name="name">knowledge.article.view.form</field>
+        <field name="model">knowledge.article</field>
+        <field name="arch" type="xml">
+            <form string="Bài viết">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_children" type="object" class="oe_stat_button"
+                                icon="fa-sitemap" invisible="child_count == 0">
+                            <field name="child_count" widget="statinfo" string="Bài con"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Đã lưu trữ" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="active" invisible="1"/>
+                    <div class="d-flex align-items-center gap-2">
+                        <field name="is_favorite" widget="boolean_favorite" nolabel="1"/>
+                        <field name="icon" class="oe_inline" style="width: 3ch"/>
+                        <h1 class="mb-0 flex-grow-1"><field name="name" placeholder="Tiêu đề bài viết"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="parent_id" options="{'no_quick_create': True}"/>
+                            <field name="complete_name" invisible="not parent_id"/>
+                        </group>
+                        <group>
+                            <field name="internal_permission" invisible="parent_id" widget="radio"/>
+                            <field name="inherited_permission" invisible="not parent_id"/>
+                            <field name="root_article_id" invisible="not parent_id"/>
+                        </group>
+                    </group>
+                    <div class="text-muted small" invisible="not parent_id">
+                        Quyền được đặt trên bài viết gốc và áp dụng cho cả nhánh.
+                    </div>
+                    <field name="body" widget="html" placeholder="Bắt đầu viết..."
+                           options="{'collaborative': true}"/>
+                    <field name="child_ids" invisible="1"/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="knowledge_article_view_search" model="ir.ui.view">
+        <field name="name">knowledge.article.view.search</field>
+        <field name="model">knowledge.article</field>
+        <field name="arch" type="xml">
+            <search string="Bài viết">
+                <field name="name" string="Tiêu đề"/>
+                <field name="body" string="Nội dung"/>
+                <field name="create_uid" string="Tác giả"/>
+                <filter string="Yêu thích của tôi" name="my_favorites" domain="[('is_favorite', '=', True)]"/>
+                <filter string="Tôi viết" name="mine" domain="[('create_uid', '=', uid)]"/>
+                <separator/>
+                <filter string="Bài viết gốc" name="roots" domain="[('parent_id', '=', False)]"/>
+                <separator/>
+                <filter string="Đã lưu trữ" name="inactive" domain="[('active', '=', False)]"/>
+                <group>
+                    <filter string="Bài viết cha" name="group_parent" context="{'group_by': 'parent_id'}"/>
+                    <filter string="Tác giả" name="group_author" context="{'group_by': 'create_uid'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="knowledge_article_action" model="ir.actions.act_window">
+        <field name="name">Bài viết</field>
+        <field name="res_model">knowledge.article</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="knowledge_article_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Viết bài đầu tiên</p>
+            <p>Gom tài liệu nội bộ thành cây bài viết, tìm kiếm được theo cả nội dung.</p>
+        </field>
+    </record>
+
+    <record id="knowledge_article_action_favorites" model="ir.actions.act_window">
+        <field name="name">Yêu thích</field>
+        <field name="res_model">knowledge.article</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="knowledge_article_view_search"/>
+        <field name="context">{'search_default_my_favorites': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa đánh dấu bài nào</p>
+            <p>Bấm ngôi sao trên một bài viết để nó xuất hiện ở đây.</p>
+        </field>
+    </record>
+
+</odoo>

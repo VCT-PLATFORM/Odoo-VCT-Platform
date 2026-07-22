@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="planning_slot_view_calendar" model="ir.ui.view">
+        <field name="name">planning.slot.view.calendar</field>
+        <field name="model">planning.slot</field>
+        <field name="arch" type="xml">
+            <calendar string="Lịch ca làm việc" date_start="start_datetime" date_stop="end_datetime"
+                      color="role_id" mode="week" event_open_popup="1" quick_create="0">
+                <field name="employee_id" filters="1" avatar_field="avatar_128"/>
+                <field name="role_id" filters="1"/>
+                <field name="project_id"/>
+                <field name="allocated_hours"/>
+                <field name="state"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="planning_slot_view_list" model="ir.ui.view">
+        <field name="name">planning.slot.view.list</field>
+        <field name="model">planning.slot</field>
+        <field name="arch" type="xml">
+            <list string="Ca làm việc" sample="1" multi_edit="1"
+                  decoration-danger="leave_conflict"
+                  decoration-warning="conflict_count &gt; 0" decoration-muted="state == 'draft'">
+                <field name="conflict_count" column_invisible="1"/>
+                <field name="leave_conflict" column_invisible="1"/>
+                <field name="start_datetime"/>
+                <field name="end_datetime"/>
+                <field name="employee_id" widget="many2one_avatar_user"/>
+                <field name="role_id"/>
+                <field name="project_id" optional="show"/>
+                <field name="allocated_hours" sum="Tổng giờ"/>
+                <field name="state" widget="badge" decoration-success="state == 'published'"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="planning_slot_view_form" model="ir.ui.view">
+        <field name="name">planning.slot.view.form</field>
+        <field name="model">planning.slot</field>
+        <field name="arch" type="xml">
+            <form string="Ca làm việc">
+                <header>
+                    <button name="action_publish" type="object" string="Công bố" class="btn-primary"
+                            invisible="state == 'published'"/>
+                    <button name="action_unpublish" type="object" string="Thu hồi"
+                            invisible="state != 'published'"/>
+                    <button name="action_assign_to_me" type="object" string="Nhận ca này"
+                            invisible="employee_id" class="btn-secondary"/>
+                    <button name="action_repeat_weekly_button" type="object"
+                            string="Lặp hàng tuần" invisible="not id"
+                            confirm="Nhân bản ca này sang các tuần kế tiếp?"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_conflicts" type="object" class="oe_stat_button"
+                                icon="fa-exclamation-triangle" invisible="conflict_count == 0">
+                            <field name="conflict_count" widget="statinfo" string="Trùng giờ"/>
+                        </button>
+                    </div>
+                    <div class="alert alert-warning" role="alert" invisible="conflict_count == 0">
+                        Nhân viên này đã có ca khác chồng giờ với ca đang mở.
+                    </div>
+                    <div class="alert alert-danger" role="alert" invisible="not leave_conflict">
+                        <field name="leave_conflict" invisible="1"/>
+                        Nhân viên này <b>đã được duyệt nghỉ phép</b> trong khoảng thời gian của ca này.
+                    </div>
+                    <group>
+                        <group>
+                            <field name="employee_id" widget="many2one_avatar_user"
+                                   placeholder="Bỏ trống để tạo ca mở"/>
+                            <field name="role_id"/>
+                            <field name="project_id"/>
+                        </group>
+                        <group>
+                            <field name="start_datetime"/>
+                            <field name="end_datetime"/>
+                            <field name="allocated_hours" widget="float_time"/>
+                            <field name="repeat_weeks"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="name" placeholder="Ghi chú cho nhân viên..." nolabel="1" colspan="2"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="planning_slot_view_search" model="ir.ui.view">
+        <field name="name">planning.slot.view.search</field>
+        <field name="model">planning.slot</field>
+        <field name="arch" type="xml">
+            <search string="Ca làm việc">
+                <field name="employee_id"/>
+                <field name="role_id"/>
+                <field name="project_id"/>
+                <filter string="Ca của tôi" name="my_shifts" domain="[('user_id', '=', uid)]"/>
+                <filter string="Ca chưa phân công" name="unassigned" domain="[('is_unassigned', '=', True)]"/>
+                <separator/>
+                <filter string="Đã công bố" name="published" domain="[('state', '=', 'published')]"/>
+                <filter string="Nháp" name="draft" domain="[('state', '=', 'draft')]"/>
+                <separator/>
+                <filter string="Bắt đầu" name="filter_start" date="start_datetime"/>
+                <group>
+                    <filter string="Nhân viên" name="group_employee" context="{'group_by': 'employee_id'}"/>
+                    <filter string="Vai trò" name="group_role" context="{'group_by': 'role_id'}"/>
+                    <filter string="Dự án" name="group_project" context="{'group_by': 'project_id'}"/>
+                    <filter string="Ngày bắt đầu" name="group_start" context="{'group_by': 'start_datetime'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="planning_slot_view_pivot" model="ir.ui.view">
+        <field name="name">planning.slot.view.pivot</field>
+        <field name="model">planning.slot</field>
+        <field name="arch" type="xml">
+            <pivot string="Phân tích ca làm việc" sample="1">
+                <field name="employee_id" type="row"/>
+                <field name="allocated_hours" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="planning_slot_action" model="ir.actions.act_window">
+        <field name="name">Lịch ca làm việc</field>
+        <field name="res_model">planning.slot</field>
+        <field name="view_mode">calendar,list,pivot,form</field>
+        <field name="search_view_id" ref="planning_slot_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Xếp ca đầu tiên</p>
+            <p>Bỏ trống nhân viên để tạo ca mở cho ai rảnh nhận. Ca bị chồng giờ sẽ được cảnh báo.</p>
+        </field>
+    </record>
+
+    <record id="planning_slot_action_my" model="ir.actions.act_window">
+        <field name="name">Ca của tôi</field>
+        <field name="res_model">planning.slot</field>
+        <field name="view_mode">calendar,list,form</field>
+        <field name="search_view_id" ref="planning_slot_view_search"/>
+        <field name="context">{'search_default_my_shifts': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Bạn chưa có ca nào</p>
+        </field>
+    </record>
+
+    <record id="planning_slot_action_open" model="ir.actions.act_window">
+        <field name="name">Ca chưa phân công</field>
+        <field name="res_model">planning.slot</field>
+        <field name="view_mode">list,calendar,form</field>
+        <field name="search_view_id" ref="planning_slot_view_search"/>
+        <field name="domain">[('is_unassigned', '=', True)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Không còn ca nào chờ người nhận</p>
+        </field>
+    </record>
+
+    <record id="planning_role_view_list" model="ir.ui.view">
+        <field name="name">planning.role.view.list</field>
+        <field name="model">planning.role</field>
+        <field name="arch" type="xml">
+            <list string="Vai trò" editable="bottom">
+                <field name="name"/>
+                <field name="color" widget="color_picker"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="planning_role_action" model="ir.actions.act_window">
+        <field name="name">Vai trò</field>
+        <field name="res_model">planning.role</field>
+        <field name="view_mode">list</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Tạo vai trò đầu tiên</p>
+            <p>Vai trò giúp phân màu và nhóm ca, ví dụ Thu ngân, Kỹ thuật, Trực đêm.</p>
+        </field>
+    </record>
+
+    <!-- action_copy_previous_week is a model-level method: reachable from a menu,
+         not from a record selection -->
+    <record id="action_copy_previous_week" model="ir.actions.server">
+        <field name="name">Sao chép lịch tuần trước</field>
+        <field name="model_id" ref="planning.model_planning_slot"/>
+        <field name="group_ids" eval="[(4, ref('planning.group_planning_manager'))]"/>
+        <field name="state">code</field>
+        <field name="code">
+slots = model.action_copy_previous_week()
+action = {
+    'type': 'ir.actions.act_window',
+    'name': 'Ca vừa sao chép',
+    'res_model': 'planning.slot',
+    'view_mode': 'list,form',
+    'domain': [('id', 'in', slots.ids)],
+}
+        </field>
+    </record>
+
+    <menuitem id="menu_planning_root" name="Kế hoạch" sequence="130"
+        web_icon="planning,static/description/icon.png"
+        groups="planning.group_planning_user"/>
+    <menuitem id="menu_planning_schedule" action="planning_slot_action"
+        parent="menu_planning_root" sequence="10" groups="planning.group_planning_manager"/>
+    <menuitem id="menu_planning_my_shifts" action="planning_slot_action_my"
+        parent="menu_planning_root" sequence="20"/>
+    <menuitem id="menu_planning_open_shifts" action="planning_slot_action_open"
+        parent="menu_planning_root" sequence="30"/>
+    <menuitem id="menu_planning_copy_week" action="action_copy_previous_week"
+        parent="menu_planning_root" sequence="40"
+        groups="planning.group_planning_manager"/>
+    <menuitem id="menu_planning_config" name="Cấu hình" parent="menu_planning_root" sequence="90"
+        groups="planning.group_planning_manager"/>
+    <menuitem id="menu_planning_roles" action="planning_role_action"
+        parent="menu_planning_config" sequence="10"/>
+
+</odoo>

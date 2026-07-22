@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- account already ships the "Statement Reports" group under Reporting -->
+    <menuitem id="menu_balance_sheet" action="action_balance_sheet"
+        parent="account.account_reports_legal_statements_menu" sequence="1"
+        groups="account.group_account_readonly"/>
+    <menuitem id="menu_profit_loss" action="action_profit_loss"
+        parent="account.account_reports_legal_statements_menu" sequence="2"
+        groups="account.group_account_readonly"/>
+    <menuitem id="menu_trial_balance" action="action_trial_balance"
+        parent="account.account_reports_legal_statements_menu" sequence="3"
+        groups="account.group_account_readonly"/>
+    <menuitem id="menu_general_ledger" action="action_general_ledger"
+        parent="account.account_reports_legal_statements_menu" sequence="4"
+        groups="account.group_account_readonly"/>
+
+</odoo>

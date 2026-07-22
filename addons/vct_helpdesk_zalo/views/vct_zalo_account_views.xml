@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="vct_zalo_account_view_list" model="ir.ui.view">
+        <field name="name">vct.zalo.account.list</field>
+        <field name="model">vct.zalo.account</field>
+        <field name="arch" type="xml">
+            <list string="Tài khoản Zalo OA">
+                <field name="name"/>
+                <field name="oa_id"/>
+                <field name="default_team_id"/>
+                <field name="token_expiry"/>
+                <field name="conversation_count"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="vct_zalo_account_view_form" model="ir.ui.view">
+        <field name="name">vct.zalo.account.form</field>
+        <field name="model">vct.zalo.account</field>
+        <field name="arch" type="xml">
+            <form string="Tài khoản Zalo OA">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_conversations" type="object"
+                                class="oe_stat_button" icon="fa-comments">
+                            <field name="conversation_count" widget="statinfo" string="Hội thoại"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Vd: VCT CSKH"/></h1>
+                    </div>
+                    <group>
+                        <group string="Định danh OA">
+                            <field name="oa_id"/>
+                            <field name="app_id"/>
+                            <field name="default_team_id"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group string="Khoá (bí mật — bạn nhập)">
+                            <field name="access_token" password="True"/>
+                            <field name="refresh_token" password="True"/>
+                            <field name="secret_key" password="True"/>
+                            <field name="token_expiry"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-info" role="alert">
+                        Cấu hình webhook trên Zalo Developers trỏ về:
+                        <code>&lt;địa-chỉ-Odoo&gt;/vct_zalo/webhook</code>.
+                        Nhập <b>Access Token</b> + <b>App Secret Key</b> để gửi và xác thực chữ ký.
+                        Token hết hạn ~1 ngày; cron tự gia hạn nếu có Refresh Token + App Secret.
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_vct_zalo_account" model="ir.actions.act_window">
+        <field name="name">Tài khoản Zalo OA</field>
+        <field name="res_model">vct.zalo.account</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Khai báo Official Account đầu tiên</p>
+            <p>Kết nối Zalo OA để tin nhắn khách vào thẳng Helpdesk và trả lời từ chatter ticket.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_vct_zalo_account" name="Tài khoản Zalo OA"
+        parent="helpdesk.menu_helpdesk_config" action="action_vct_zalo_account" sequence="60"/>
+</odoo>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="planning_role_default" model="planning.role">
+        <field name="name">Ca chung</field>
+        <field name="color">4</field>
+    </record>
+
+    <record id="mail_template_slot_published" model="mail.template">
+        <field name="name">Kế hoạch: Thông báo ca làm việc</field>
+        <field name="model_id" ref="planning.model_planning_slot"/>
+        <field name="subject">Lịch làm việc của bạn</field>
+        <field name="email_from">{{ user.email_formatted }}</field>
+        <field name="email_to">{{ object.employee_id.work_email }}</field>
+        <field name="use_default_to" eval="False"/>
+        <field name="description">Gửi cho nhân viên khi ca làm việc được công bố</field>
+        <field name="body_html" type="html">
+<div style="margin:0px;padding:0px;font-size:13px;">
+    <p>Chào <t t-out="object.employee_id.name or ''">Nguyễn Văn A</t>,</p>
+    <p>Bạn có ca làm việc mới:</p>
+    <ul>
+        <li>Bắt đầu: <strong t-out="object.start_datetime or ''">01/01/2026 08:00</strong></li>
+        <li>Kết thúc: <strong t-out="object.end_datetime or ''">01/01/2026 17:00</strong></li>
+        <li t-if="object.role_id">Vai trò: <strong t-out="object.role_id.name or ''">Thu ngân</strong></li>
+        <li t-if="object.project_id">Dự án: <strong t-out="object.project_id.name or ''">Dự án A</strong></li>
+    </ul>
+    <p t-if="object.name"><t t-out="object.name or ''">Ghi chú</t></p>
+    <p>Trân trọng,<br/><t t-out="user.name or ''">Quản lý</t></p>
+</div>
+        </field>
+        <field name="auto_delete" eval="True"/>
+    </record>
+
+</odoo>

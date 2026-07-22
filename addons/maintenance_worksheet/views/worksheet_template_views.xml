@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Template Line Option Views -->
+        <record id="worksheet_template_line_option_view_form" model="ir.ui.view">
+            <field name="name">worksheet.template.line.option.view.form</field>
+            <field name="model">worksheet.template.line.option</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="sequence"/>
+                        <field name="name"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <!-- Template Line Views -->
+        <record id="worksheet_template_line_view_form" model="ir.ui.view">
+            <field name="name">worksheet.template.line.view.form</field>
+            <field name="model">worksheet.template.line</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="type"/>
+                            </group>
+                            <group>
+                                <field name="sequence"/>
+                                <field name="is_required"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Tùy chọn hiển thị" name="options" invisible="type != 'selection'">
+                                <field name="option_ids">
+                                    <list editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="name"/>
+                                    </list>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Worksheet Template Form View -->
+        <record id="maintenance_worksheet_template_view_form" model="ir.ui.view">
+            <field name="name">maintenance.worksheet.template.view.form</field>
+            <field name="model">maintenance.worksheet.template</field>
+            <field name="arch" type="xml">
+                <form string="Mẫu bảng công tác">
+                    <sheet>
+                        <widget name="web_ribbon" title="Đã lưu trữ" bg_color="text-bg-danger" invisible="active"/>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="active" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="description"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Câu hỏi &amp; Công tác kiểm tra" name="lines">
+                                <field name="line_ids">
+                                    <list>
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="name"/>
+                                        <field name="type"/>
+                                        <field name="is_required"/>
+                                    </list>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Worksheet Template Tree View -->
+        <record id="maintenance_worksheet_template_view_tree" model="ir.ui.view">
+            <field name="name">maintenance.worksheet.template.view.tree</field>
+            <field name="model">maintenance.worksheet.template</field>
+            <field name="arch" type="xml">
+                <list string="Mẫu bảng công tác">
+                    <field name="name"/>
+                    <field name="description"/>
+                    <field name="active"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Worksheet Template Action -->
+        <record id="maintenance_worksheet_template_action" model="ir.actions.act_window">
+            <field name="name">Mẫu bảng công tác</field>
+            <field name="res_model">maintenance.worksheet.template</field>
+            <field name="view_mode">list,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Tạo mẫu bảng công tác bảo dưỡng đầu tiên
+                </p>
+                <p>
+                    Thiết lập các tiêu chí, checklist, thông số kỹ thuật cần đo đạc khi bảo trì thiết bị.
+                </p>
+            </field>
+        </record>
+
+        <!-- Menu Item -->
+        <menuitem id="menu_maintenance_worksheet_templates"
+                  name="Mẫu bảng công tác"
+                  parent="maintenance.menu_maintenance_configuration"
+                  sequence="30"
+                  action="maintenance_worksheet_template_action"/>
+
+    </data>
+</odoo>

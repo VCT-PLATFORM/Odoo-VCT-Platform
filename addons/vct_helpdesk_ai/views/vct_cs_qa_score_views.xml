@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="vct_cs_qa_score_view_list" model="ir.ui.view">
+        <field name="name">vct.cs.qa.score.list</field>
+        <field name="model">vct.cs.qa.score</field>
+        <field name="arch" type="xml">
+            <list string="Điểm QA" create="false" decoration-danger="at_risk"
+                  decoration-muted="reviewed">
+                <field name="create_date"/>
+                <field name="ticket_id"/>
+                <field name="partner_id"/>
+                <field name="team_id" optional="show"/>
+                <field name="score"/>
+                <field name="at_risk"/>
+                <field name="reviewed"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="vct_cs_qa_score_view_form" model="ir.ui.view">
+        <field name="name">vct.cs.qa.score.form</field>
+        <field name="model">vct.cs.qa.score</field>
+        <field name="arch" type="xml">
+            <form string="Điểm QA" create="false">
+                <header>
+                    <button name="action_mark_reviewed" type="object" string="Đánh dấu đã soát"
+                            class="btn-primary" invisible="reviewed"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Nguy cơ" bg_color="text-bg-danger" invisible="not at_risk"/>
+                    <group>
+                        <group>
+                            <field name="ticket_id"/>
+                            <field name="partner_id"/>
+                            <field name="score"/>
+                            <field name="at_risk"/>
+                        </group>
+                        <group>
+                            <field name="reviewed"/>
+                            <field name="reviewer_id"/>
+                            <field name="create_date"/>
+                        </group>
+                    </group>
+                    <separator string="Nhận xét AI"/>
+                    <field name="notes" readonly="1"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="vct_cs_qa_score_view_search" model="ir.ui.view">
+        <field name="name">vct.cs.qa.score.search</field>
+        <field name="model">vct.cs.qa.score</field>
+        <field name="arch" type="xml">
+            <search string="Điểm QA">
+                <field name="ticket_id"/>
+                <field name="partner_id"/>
+                <filter name="at_risk" string="Có nguy cơ" domain="[('at_risk','=',True)]"/>
+                <filter name="not_reviewed" string="Chưa soát" domain="[('reviewed','=',False)]"/>
+                <group>
+                    <filter name="group_team" string="Đội" context="{'group_by':'team_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_vct_cs_qa_score" model="ir.actions.act_window">
+        <field name="name">Điểm QA (AutoQA)</field>
+        <field name="res_model">vct.cs.qa.score</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_at_risk': 1, 'search_default_not_reviewed': 1}</field>
+    </record>
+
+    <menuitem id="menu_vct_cs_qa_score" name="QA hội thoại (AutoQA)"
+        parent="helpdesk.menu_helpdesk_config" action="action_vct_cs_qa_score" sequence="72"/>
+</odoo>

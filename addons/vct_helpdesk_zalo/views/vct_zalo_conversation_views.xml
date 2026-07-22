@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="vct_zalo_conversation_view_list" model="ir.ui.view">
+        <field name="name">vct.zalo.conversation.list</field>
+        <field name="model">vct.zalo.conversation</field>
+        <field name="arch" type="xml">
+            <list string="Hội thoại Zalo">
+                <field name="name"/>
+                <field name="account_id"/>
+                <field name="partner_id"/>
+                <field name="ticket_id"/>
+                <field name="state" widget="badge"
+                       decoration-info="state=='bot'" decoration-success="state=='human'"
+                       decoration-muted="state=='closed'"/>
+                <field name="last_message_at"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="vct_zalo_conversation_view_form" model="ir.ui.view">
+        <field name="name">vct.zalo.conversation.form</field>
+        <field name="model">vct.zalo.conversation</field>
+        <field name="arch" type="xml">
+            <form string="Hội thoại Zalo">
+                <header>
+                    <button name="action_open_ticket" type="object" string="Mở ticket"
+                            class="btn-primary" invisible="not ticket_id"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="account_id"/>
+                            <field name="zalo_user_id"/>
+                            <field name="partner_id"/>
+                        </group>
+                        <group>
+                            <field name="ticket_id"/>
+                            <field name="last_message_at"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_vct_zalo_conversation" model="ir.actions.act_window">
+        <field name="name">Hội thoại Zalo</field>
+        <field name="res_model">vct.zalo.conversation</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_vct_zalo_conversation" name="Hội thoại Zalo"
+        parent="helpdesk.menu_helpdesk_config" action="action_vct_zalo_conversation" sequence="61"/>
+</odoo>

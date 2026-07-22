@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_ai_workflow_log_list" model="ir.ui.view">
+        <field name="name">vct.ai.workflow.log.list</field>
+        <field name="model">vct.ai.workflow.log</field>
+        <field name="arch" type="xml">
+            <list string="Nhật ký Workflow AI" create="0" edit="0"
+                  decoration-danger="not success">
+                <field name="create_date" string="Thời điểm"/>
+                <field name="action_id"/>
+                <field name="res_model"/>
+                <field name="res_id"/>
+                <field name="success"/>
+                <field name="error" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ai_workflow_log_form" model="ir.ui.view">
+        <field name="name">vct.ai.workflow.log.form</field>
+        <field name="model">vct.ai.workflow.log</field>
+        <field name="arch" type="xml">
+            <form string="Nhật ký Workflow AI" create="0" edit="0">
+                <sheet>
+                    <group>
+                        <field name="action_id"/>
+                        <field name="record_ref"/>
+                        <field name="success"/>
+                        <field name="error" invisible="success"/>
+                    </group>
+                    <group string="Chỉ dẫn gửi AI">
+                        <field name="prompt" nolabel="1"/>
+                    </group>
+                    <group string="Kết quả AI">
+                        <field name="result" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_ai_workflow_log_search" model="ir.ui.view">
+        <field name="name">vct.ai.workflow.log.search</field>
+        <field name="model">vct.ai.workflow.log</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="action_id"/>
+                <field name="res_model"/>
+                <filter name="failed" string="Thất bại" domain="[('success', '=', False)]"/>
+                <group>
+                    <filter name="group_action" string="Workflow"
+                            context="{'group_by': 'action_id'}"/>
+                    <filter name="group_model" string="Model"
+                            context="{'group_by': 'res_model'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_ai_workflow_log" model="ir.actions.act_window">
+        <field name="name">Nhật ký thực thi</field>
+        <field name="res_model">vct.ai.workflow.log</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa có lần chạy nào</p>
+            <p>Mỗi lần một bước AI chạy sẽ ghi lại chỉ dẫn và kết quả tại đây.</p>
+        </field>
+    </record>
+
+</odoo>

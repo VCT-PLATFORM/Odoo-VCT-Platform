@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_financial_report_line_view_list" model="ir.ui.view">
+        <field name="name">account.financial.report.line.view.list</field>
+        <field name="model">account.financial.report.line</field>
+        <field name="arch" type="xml">
+            <list create="0" delete="0" edit="0" limit="200"
+                  decoration-bf="is_total or level == 0"
+                  decoration-primary="level == 0">
+                <field name="is_total" column_invisible="1"/>
+                <field name="level" column_invisible="1"/>
+                <field name="account_id" column_invisible="1"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="code" string="Mã số" optional="show"/>
+                <field name="name" string="Chỉ tiêu"/>
+                <field name="balance" string="Số tiền" sum="Tổng" widget="monetary"/>
+                <button name="action_open_ledger" type="object" icon="fa-search"
+                        title="Xem các bút toán chi tiết" invisible="not account_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="account_financial_report_view_form" model="ir.ui.view">
+        <field name="name">account.financial.report.view.form</field>
+        <field name="model">account.financial.report</field>
+        <field name="arch" type="xml">
+            <form string="Báo cáo tài chính" create="0" edit="1">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="report_type" readonly="1" nolabel="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date_from" invisible="report_type == 'balance_sheet'"
+                                   required="report_type == 'profit_loss'"/>
+                            <field name="date_to"/>
+                        </group>
+                        <group>
+                            <field name="target_move" widget="radio"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-warning" role="alert">
+                        <b>Chưa phải biểu mẫu pháp định — không dùng để nộp cơ quan thuế.</b>
+                        Số liệu cân đúng, nhưng đây là bảng tổng hợp quản trị:
+                        chỉ tiêu gom theo loại tài khoản của Odoo, chưa có Mã số, và chưa
+                        áp dụng phép thử 12 tháng/chu kỳ kinh doanh để phân loại ngắn hạn –
+                        dài hạn (TT 99/2025/TT-BTC Điều 20.4).
+                        Thiếu 2/4 báo cáo bắt buộc theo Điều 17.1: Lưu chuyển tiền tệ (B03-DN)
+                        và Thuyết minh (B09-DN). Biểu mẫu và Mã số nằm ở Phụ lục IV —
+                        Công báo 1565+1566, chưa có trong tài liệu đã cung cấp.
+                    </div>
+                    <div class="text-muted mb-2" invisible="report_type != 'balance_sheet'">
+                        Số dư luỹ kế đến ngày đã chọn. Lợi nhuận chưa phân phối được suy ra từ
+                        các tài khoản doanh thu/chi phí, nên bảng luôn cân kể cả khi chưa khoá sổ.
+                    </div>
+                    <field name="line_ids" nolabel="1" readonly="1"
+                           context="{'list_view_ref': 'account_financial_report.account_financial_report_line_view_list'}"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_balance_sheet" model="ir.actions.act_window">
+        <field name="name">Báo cáo tình hình tài chính</field>
+        <field name="res_model">account.financial.report</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="account_financial_report_view_form"/>
+        <field name="target">current</field>
+        <field name="context">{'default_report_type': 'balance_sheet'}</field>
+    </record>
+
+    <record id="action_profit_loss" model="ir.actions.act_window">
+        <field name="name">Báo cáo kết quả hoạt động kinh doanh</field>
+        <field name="res_model">account.financial.report</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="account_financial_report_view_form"/>
+        <field name="target">current</field>
+        <field name="context">{'default_report_type': 'profit_loss'}</field>
+    </record>
+
+</odoo>

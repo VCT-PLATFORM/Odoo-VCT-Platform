@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+        <!-- base advertises Helpdesk as an Enterprise app to buy, which is what
+             puts an "Upgrade" button instead of "Activate" in the Apps list. That
+             record carries no noupdate flag, so it comes back on every base
+             update: this module is that app, so keep the flag cleared. -->
+        <record id="base.module_helpdesk" model="ir.module.module">
+            <field name="to_buy" eval="False"/>
+            <field name="license">LGPL-3</field>
+            <field name="website">https://www.odoo.com/app/helpdesk</field>
+        </record>
+    </data>
+
+    <data noupdate="1">
+        <record id="ir_cron_flag_sla_failures" model="ir.cron">
+            <field name="name">Hỗ trợ: Đánh dấu phiếu đã vỡ hạn SLA</field>
+            <field name="model_id" ref="helpdesk.model_helpdesk_ticket"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_flag_sla_failures()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+        </record>
+
+        <record id="stage_new" model="helpdesk.stage">
+            <field name="name">New</field>
+            <field name="sequence">10</field>
+        </record>
+        <record id="stage_in_progress" model="helpdesk.stage">
+            <field name="name">In Progress</field>
+            <field name="sequence">20</field>
+        </record>
+        <record id="stage_solved" model="helpdesk.stage">
+            <field name="name">Solved</field>
+            <field name="sequence">30</field>
+            <field name="fold" eval="True"/>
+        </record>
+        <record id="stage_cancelled" model="helpdesk.stage">
+            <field name="name">Cancelled</field>
+            <field name="sequence">40</field>
+            <field name="fold" eval="True"/>
+        </record>
+
+        <record id="helpdesk_team_default" model="helpdesk.team">
+            <field name="name">Customer Care</field>
+        </record>
+    </data>
+
+</odoo>

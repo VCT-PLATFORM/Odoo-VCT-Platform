@@ -1,0 +1,1 @@
+# Written for VCT Platform. Not part of Odoo S.A.

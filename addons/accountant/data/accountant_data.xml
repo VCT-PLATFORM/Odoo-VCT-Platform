@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+        <!-- base advertises Accounting as an Enterprise app to buy, which is what
+             puts an "Upgrade" button instead of "Activate" in the Apps list. That
+             record carries no noupdate flag, so it comes back on every base
+             update: this module is that app, so keep the flag cleared. -->
+        <record id="base.module_accountant" model="ir.module.module">
+            <field name="to_buy" eval="False"/>
+            <field name="license">LGPL-3</field>
+            <field name="website">https://www.odoo.com/app/accounting</field>
+        </record>
+
+        <!-- account names its app "Invoicing" because Community stops there.
+             With the accounting features unlocked it really is the Accounting
+             app, so say so. The name is translatable: this sets the source, and
+             i18n/vi.po carries the Vietnamese, otherwise account's own "Hóa đơn"
+             translation keeps winning on screen. -->
+        <record id="account.menu_finance" model="ir.ui.menu">
+            <field name="name">Accounting</field>
+        </record>
+    </data>
+
+</odoo>

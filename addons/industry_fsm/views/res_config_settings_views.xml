@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.industry.fsm</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="63"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Dịch vụ hiện trường" string="Dịch vụ hiện trường"
+                     name="industry_fsm" groups="project.group_project_manager">
+                    <block title="Dự án hiện trường">
+                        <setting string="Dự án"
+                                 help="Đánh dấu 'Dịch vụ hiện trường' trên một dự án để công việc của nó có bấm giờ và xác nhận hoàn thành.">
+                            <button name="%(project.open_view_project_all)d" type="action"
+                                    string="Dự án" class="btn-link" icon="oi-arrow-right"/>
+                        </setting>
+                    </block>
+                    <block title="Giờ công">
+                        <setting string="Chấm công"
+                                 help="Kỹ thuật viên phải có quyền Chấm công thì bấm giờ mới ghi được giờ công.">
+                            <button name="%(base.action_res_users)d" type="action"
+                                    string="Người dùng" class="btn-link" icon="oi-arrow-right"/>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_fsm_configuration" model="ir.actions.act_window">
+        <field name="name">Cài đặt</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'module': 'industry_fsm'}</field>
+    </record>
+
+    <menuitem id="menu_fsm_config" name="Cấu hình" parent="menu_fsm_root" sequence="90"
+        groups="project.group_project_manager"/>
+    <menuitem id="menu_fsm_settings" name="Cài đặt" parent="menu_fsm_config"
+        sequence="0" action="action_fsm_configuration" groups="base.group_system"/>
+
+</odoo>

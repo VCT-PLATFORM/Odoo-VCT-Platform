@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Assign an activity of this type on ANY record → mail_activity.create
+         spawns an AI task that does it and marks the activity done. -->
+    <record id="mail_activity_type_ai" model="mail.activity.type">
+        <field name="name">Giao cho Trợ lý AI</field>
+        <field name="icon">fa-magic</field>
+        <field name="summary">Trợ lý AI tự xử lý và đánh dấu xong</field>
+    </record>
+</odoo>

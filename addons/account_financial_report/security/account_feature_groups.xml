@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        account ships the full accounting UI but hides it behind
+        group_account_user / group_account_readonly ("Show Full Accounting
+        Features"), and nothing in Community ever grants them: that is the line
+        between the Invoicing app and the Accounting app. Nobody being in those
+        groups means Journal Entries, Journal Items, the Chart of Accounts menu
+        and the Statement Reports the reports below hang under are all invisible.
+
+        Accounting Administrators get the features, exactly like the Enterprise
+        app does. Other users can still be granted group_account_user one by one.
+        To revert, drop this record and remove the group from the users.
+    -->
+    <record id="account.group_account_manager" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('account.group_account_user'))]"/>
+    </record>
+
+</odoo>

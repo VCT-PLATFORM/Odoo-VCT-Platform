@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="vct_messenger_account_view_list" model="ir.ui.view">
+        <field name="name">vct.messenger.account.list</field>
+        <field name="model">vct.messenger.account</field>
+        <field name="arch" type="xml">
+            <list string="Facebook Messenger">
+                <field name="name"/>
+                <field name="page_id"/>
+                <field name="default_team_id"/>
+                <field name="conversation_count"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="vct_messenger_account_view_form" model="ir.ui.view">
+        <field name="name">vct.messenger.account.form</field>
+        <field name="model">vct.messenger.account</field>
+        <field name="arch" type="xml">
+            <form string="Facebook Messenger">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_conversations" type="object"
+                                class="oe_stat_button" icon="fa-comments">
+                            <field name="conversation_count" widget="statinfo" string="Hội thoại"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Vd: Fanpage VCT"/></h1>
+                    </div>
+                    <group>
+                        <group string="Định danh Page">
+                            <field name="page_id"/>
+                            <field name="default_team_id"/>
+                            <field name="verify_token"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group string="Khoá (bí mật — bạn nhập)">
+                            <field name="page_access_token" password="True"/>
+                            <field name="app_secret" password="True"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-info" role="alert">
+                        Webhook Facebook (Messenger) trỏ về <code>&lt;địa-chỉ-Odoo&gt;/vct_messenger/webhook</code>,
+                        Verify Token khớp ô trên. Nhập Page Access Token + App Secret để gửi và xác thực chữ ký.
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_vct_messenger_account" model="ir.actions.act_window">
+        <field name="name">Facebook Messenger</field>
+        <field name="res_model">vct.messenger.account</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Kết nối Fanpage đầu tiên</p>
+            <p>Đưa tin nhắn Messenger vào Helpdesk và trả lời từ chatter ticket.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_vct_messenger_account" name="Facebook Messenger"
+        parent="helpdesk.menu_helpdesk_config" action="action_vct_messenger_account" sequence="62"/>
+</odoo>

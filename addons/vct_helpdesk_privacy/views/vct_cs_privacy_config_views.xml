@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="vct_cs_privacy_config_view_form" model="ir.ui.view">
+        <field name="name">vct.cs.privacy.config.form</field>
+        <field name="model">vct.cs.privacy.config</field>
+        <field name="arch" type="xml">
+            <form string="Bảo mật dữ liệu CSKH">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group string="Che dữ liệu nhạy cảm">
+                            <field name="mask_enabled"/>
+                            <field name="mask_cards" invisible="not mask_enabled"/>
+                            <field name="mask_id" invisible="not mask_enabled"/>
+                            <field name="mask_phone" invisible="not mask_enabled"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group string="Lưu trữ dữ liệu">
+                            <field name="retention_months"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-info" role="alert">
+                        Che áp dụng cho tin nhắn &amp; mô tả ticket khi lưu (gồm tin Zalo vào).
+                        Lưu trữ chỉ <b>archive</b> ticket đóng quá hạn — không xoá cứng.
+                        Hỗ trợ tuân thủ NĐ 13/2023/NĐ-CP.
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="vct_cs_privacy_config_view_list" model="ir.ui.view">
+        <field name="name">vct.cs.privacy.config.list</field>
+        <field name="model">vct.cs.privacy.config</field>
+        <field name="arch" type="xml">
+            <list string="Bảo mật CSKH">
+                <field name="name"/>
+                <field name="mask_enabled"/>
+                <field name="retention_months"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_vct_cs_privacy_config" model="ir.actions.act_window">
+        <field name="name">Bảo mật dữ liệu (NĐ13)</field>
+        <field name="res_model">vct.cs.privacy.config</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_vct_cs_privacy_config" name="Bảo mật dữ liệu (NĐ13)"
+        parent="helpdesk.menu_helpdesk_config" action="action_vct_cs_privacy_config" sequence="80"/>
+</odoo>

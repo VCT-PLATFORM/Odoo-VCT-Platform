@@ -1,0 +1,5 @@
+# Written for VCT Platform. Not part of Odoo S.A.
+# Import cho side-effect (đăng ký model Odoo) — đừng để linter xoá.
+from . import vct_messenger_account  # noqa: F401
+from . import vct_messenger_conversation  # noqa: F401
+from . import helpdesk_ticket  # noqa: F401

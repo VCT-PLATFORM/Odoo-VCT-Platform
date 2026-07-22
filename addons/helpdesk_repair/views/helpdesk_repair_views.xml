@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="helpdesk_ticket_view_form_repair" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.view.form.repair</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_repairs" type="object" class="oe_stat_button"
+                        icon="fa-wrench" invisible="repair_count == 0">
+                    <field name="repair_count" widget="statinfo" string="Sửa chữa"/>
+                </button>
+            </xpath>
+            <header position="inside">
+                <button name="action_create_repair" type="object" string="Tạo lệnh sửa chữa"
+                        invisible="id == False"/>
+            </header>
+        </field>
+    </record>
+
+    <record id="repair_order_view_form_ticket" model="ir.ui.view">
+        <field name="name">repair.order.view.form.ticket</field>
+        <field name="model">repair.order</field>
+        <field name="inherit_id" ref="repair.view_repair_order_form"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="ticket_id" invisible="not ticket_id" readonly="1"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

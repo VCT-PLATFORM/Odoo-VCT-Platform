@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Giờ làm việc VN cho đồng hồ SLA. Gán lịch này cho Công ty hoặc Team hỗ trợ
+         (Cài đặt) để SLA tính theo giờ làm VN. Không tự gán để tránh đổi cấu hình công ty. -->
+    <record id="resource_calendar_vn" model="resource.calendar">
+        <field name="name">Giờ làm việc VN (T2–T6, 8:00–17:00)</field>
+        <field name="tz">Asia/Ho_Chi_Minh</field>
+        <field name="hours_per_day">8</field>
+    </record>
+
+    <!-- T2–T6, sáng 8:00–12:00, chiều 13:00–17:00 -->
+    <record id="att_mon_am" model="resource.calendar.attendance"><field name="name">T2 sáng</field><field name="dayofweek">0</field><field name="hour_from">8</field><field name="hour_to">12</field><field name="day_period">morning</field><field name="calendar_id" ref="resource_calendar_vn"/></record>
+    <record id="att_mon_pm" model="resource.calendar.attendance"><field name="name">T2 chiều</field><field name="dayofweek">0</field><field name="hour_from">13</field><field name="hour_to">17</field><field name="day_period">afternoon</field><field name="calendar_id" ref="resource_calendar_vn"/></record>
+    <record id="att_tue_am" model="resource.calendar.attendance"><field name="name">T3 sáng</field><field name="dayofweek">1</field><field name="hour_from">8</field><field name="hour_to">12</field><field name="day_period">morning</field><field name="calendar_id" ref="resource_calendar_vn"/></record>
+    <record id="att_tue_pm" model="resource.calendar.attendance"><field name="name">T3 chiều</field><field name="dayofweek">1</field><field name="hour_from">13</field><field name="hour_to">17</field><field name="day_period">afternoon</field><field name="calendar_id" ref="resource_calendar_vn"/></record>
+    <record id="att_wed_am" model="resource.calendar.attendance"><field name="name">T4 sáng</field><field name="dayofweek">2</field><field name="hour_from">8</field><field name="hour_to">12</field><field name="day_period">morning</field><field name="calendar_id" ref="resource_calendar_vn"/></record>
+    <record id="att_wed_pm" model="resource.calendar.attendance"><field name="name">T4 chiều</field><field name="dayofweek">2</field><field name="hour_from">13</field><field name="hour_to">17</field><field name="day_period">afternoon</field><field name="calendar_id" ref="resource_calendar_vn"/></record>
+    <record id="att_thu_am" model="resource.calendar.attendance"><field name="name">T5 sáng</field><field name="dayofweek">3</field><field name="hour_from">8</field><field name="hour_to">12</field><field name="day_period">morning</field><field name="calendar_id" ref="resource_calendar_vn"/></record>
+    <record id="att_thu_pm" model="resource.calendar.attendance"><field name="name">T5 chiều</field><field name="dayofweek">3</field><field name="hour_from">13</field><field name="hour_to">17</field><field name="day_period">afternoon</field><field name="calendar_id" ref="resource_calendar_vn"/></record>
+    <record id="att_fri_am" model="resource.calendar.attendance"><field name="name">T6 sáng</field><field name="dayofweek">4</field><field name="hour_from">8</field><field name="hour_to">12</field><field name="day_period">morning</field><field name="calendar_id" ref="resource_calendar_vn"/></record>
+    <record id="att_fri_pm" model="resource.calendar.attendance"><field name="name">T6 chiều</field><field name="dayofweek">4</field><field name="hour_from">13</field><field name="hour_to">17</field><field name="day_period">afternoon</field><field name="calendar_id" ref="resource_calendar_vn"/></record>
+
+    <!-- Ngày lễ VN cố định 2026 (dương lịch). LƯU Ý: Tết Nguyên đán + Giỗ Tổ là
+         âm lịch, đổi theo năm → thêm tay hằng năm tại Cài đặt > Kỹ thuật > Lịch làm việc. -->
+    <record id="hol_2026_newyear" model="resource.calendar.leaves"><field name="name">Tết Dương lịch 2026</field><field name="calendar_id" ref="resource_calendar_vn"/><field name="date_from">2026-01-01 00:00:00</field><field name="date_to">2026-01-01 23:59:59</field></record>
+    <record id="hol_2026_reunification" model="resource.calendar.leaves"><field name="name">Giải phóng miền Nam 30/4</field><field name="calendar_id" ref="resource_calendar_vn"/><field name="date_from">2026-04-30 00:00:00</field><field name="date_to">2026-04-30 23:59:59</field></record>
+    <record id="hol_2026_labour" model="resource.calendar.leaves"><field name="name">Quốc tế Lao động 1/5</field><field name="calendar_id" ref="resource_calendar_vn"/><field name="date_from">2026-05-01 00:00:00</field><field name="date_to">2026-05-01 23:59:59</field></record>
+    <record id="hol_2026_national" model="resource.calendar.leaves"><field name="name">Quốc khánh 2/9</field><field name="calendar_id" ref="resource_calendar_vn"/><field name="date_from">2026-09-02 00:00:00</field><field name="date_to">2026-09-02 23:59:59</field></record>
+</odoo>
