@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_vct_fb_post,fb post,model_vct_fb_post,base.group_user,1,1,1,1
+access_vct_fb_comment,fb comment,model_vct_fb_comment,base.group_user,1,1,1,1
+access_vct_fb_comment_reply_wizard,fb comment reply wizard,model_vct_fb_comment_reply_wizard,base.group_user,1,1,1,1

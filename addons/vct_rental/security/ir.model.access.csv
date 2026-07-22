@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_vct_rental_order_user,rental order user,model_vct_rental_order,base.group_user,1,1,1,0
+access_vct_rental_order_manager,rental order manager,model_vct_rental_order,vct_rental.group_rental_manager,1,1,1,1
+access_vct_rental_line_user,rental line user,model_vct_rental_order_line,base.group_user,1,1,1,1
+access_vct_rental_line_manager,rental line manager,model_vct_rental_order_line,vct_rental.group_rental_manager,1,1,1,1

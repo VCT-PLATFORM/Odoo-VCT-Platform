@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_template_form_view_rental" model="ir.ui.view">
+        <field name="name">product.template.form.rental</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Cho thuê" name="rental">
+                    <group>
+                        <field name="rental_ok"/>
+                        <field name="rental_price_day" invisible="not rental_ok"/>
+                        <field name="rental_stock" invisible="not rental_ok"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

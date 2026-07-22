@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ai_agent_user,ai.agent user,model_ai_agent,base.group_user,1,0,0,0
+access_ai_agent_manager,ai.agent manager,model_ai_agent,base.group_system,1,1,1,1
+access_ai_agent_command_user,ai.agent.command user,model_ai_agent_command,base.group_user,1,0,0,0
+access_ai_agent_command_manager,ai.agent.command manager,model_ai_agent_command,base.group_system,1,1,1,1
+access_ai_ask_wizard,ai.ask.wizard,model_ai_ask_wizard,base.group_user,1,1,1,1

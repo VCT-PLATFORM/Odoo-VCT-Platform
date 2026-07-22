@@ -29,12 +29,22 @@ class ApprovalRequest(models.Model):
     has_amount = fields.Boolean(related='category_id.has_amount')
     has_date = fields.Boolean(related='category_id.has_date')
     approved_count = fields.Integer(compute='_compute_approver_stats')
+    can_approve = fields.Boolean(compute='_compute_can_approve')
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company)
 
     @api.depends('approver_ids.status')
     def _compute_approver_stats(self):
         for req in self:
             req.approved_count = len(req.approver_ids.filtered(lambda a: a.status == 'approved'))
+
+    @api.depends('approver_ids.user_id', 'approver_ids.status', 'state')
+    @api.depends_context('uid')
+    def _compute_can_approve(self):
+        # phụ thuộc người dùng hiện tại; depends_context('uid') để cache key theo user
+        for req in self:
+            mine = req.approver_ids.filtered(lambda a: a.user_id == req.env.user)
+            req.can_approve = req.state == 'pending' and bool(
+                mine.filtered(lambda a: a.status in ('pending', 'new')))
 
     @api.onchange('category_id')
     def _onchange_category_id(self):

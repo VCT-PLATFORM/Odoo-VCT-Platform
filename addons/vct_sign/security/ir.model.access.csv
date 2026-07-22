@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_sign_template_user,sign.template user,model_sign_template,base.group_user,1,0,0,0
+access_sign_template_manager,sign.template manager,model_sign_template,vct_sign.group_sign_manager,1,1,1,1
+access_sign_item_user,sign.item user,model_sign_item,base.group_user,1,0,0,0
+access_sign_item_manager,sign.item manager,model_sign_item,vct_sign.group_sign_manager,1,1,1,1
+access_sign_request_user,sign.request user,model_sign_request,base.group_user,1,1,1,0
+access_sign_request_manager,sign.request manager,model_sign_request,vct_sign.group_sign_manager,1,1,1,1

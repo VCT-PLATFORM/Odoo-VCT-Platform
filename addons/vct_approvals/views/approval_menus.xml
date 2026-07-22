@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_approvals_root" name="Phê duyệt" sequence="95"/>
+
+    <menuitem id="menu_approval_my" name="Yêu cầu của tôi" parent="menu_approvals_root"
+        action="action_approval_request_my" sequence="10"/>
+    <menuitem id="menu_approval_to_approve" name="Chờ tôi duyệt" parent="menu_approvals_root"
+        action="action_approval_request_to_approve" sequence="20"/>
+    <menuitem id="menu_approval_all" name="Tất cả yêu cầu" parent="menu_approvals_root"
+        action="action_approval_request_all" sequence="30"
+        groups="vct_approvals.group_approval_manager"/>
+
+    <menuitem id="menu_approval_config" name="Cấu hình" parent="menu_approvals_root" sequence="90"
+        groups="vct_approvals.group_approval_manager"/>
+    <menuitem id="menu_approval_category" name="Loại phê duyệt" parent="menu_approval_config"
+        action="action_approval_category" sequence="10"/>
+</odoo>

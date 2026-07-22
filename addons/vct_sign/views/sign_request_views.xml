@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sign_request_view_list" model="ir.ui.view">
+        <field name="name">sign.request.list</field>
+        <field name="model">sign.request</field>
+        <field name="arch" type="xml">
+            <list string="Yêu cầu ký" decoration-success="state=='signed'"
+                  decoration-muted="state=='cancel'">
+                <field name="name"/>
+                <field name="template_id"/>
+                <field name="signer_partner_id"/>
+                <field name="signed_on" optional="show"/>
+                <field name="state" widget="badge"
+                       decoration-success="state=='signed'" decoration-info="state=='sent'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="sign_request_view_form" model="ir.ui.view">
+        <field name="name">sign.request.form</field>
+        <field name="model">sign.request</field>
+        <field name="arch" type="xml">
+            <form string="Yêu cầu ký">
+                <header>
+                    <button name="action_send" type="object" string="Gửi" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_sign" type="object" string="Ký ngay" class="btn-primary"
+                            invisible="state not in ('draft', 'sent')"/>
+                    <button name="action_cancel" type="object" string="Huỷ"
+                            invisible="state in ('cancel', 'signed')"/>
+                    <button name="action_reset" type="object" string="Về nháp"
+                            invisible="state != 'cancel'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,sent,signed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="template_id"/>
+                            <field name="signer_partner_id"/>
+                            <field name="signer_email"/>
+                        </group>
+                        <group>
+                            <field name="signer_name" readonly="state == 'signed'"/>
+                            <field name="signed_on"/>
+                            <field name="request_owner_id"/>
+                        </group>
+                    </group>
+                    <group string="Kết quả" invisible="state != 'signed'">
+                        <field name="signed_pdf" filename="signed_filename" widget="binary"/>
+                        <field name="signed_filename" invisible="1"/>
+                        <field name="document_hash"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_sign_request" model="ir.actions.act_window">
+        <field name="name">Yêu cầu ký</field>
+        <field name="res_model">sign.request</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

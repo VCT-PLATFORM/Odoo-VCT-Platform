@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_shipping" model="ir.ui.view">
+        <field name="name">sale.order.form.shipping.vn</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_shipments" type="object" class="oe_stat_button"
+                        icon="fa-truck" invisible="shipment_count == 0">
+                    <field name="shipment_count" widget="statinfo" string="Vận đơn"/>
+                </button>
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <button name="action_create_shipment" type="object" string="Tạo vận đơn VN"
+                        invisible="state == 'cancel'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

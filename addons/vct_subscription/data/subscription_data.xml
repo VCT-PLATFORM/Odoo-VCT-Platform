@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="seq_subscription" model="ir.sequence">
+        <field name="name">Thuê bao</field>
+        <field name="code">vct.subscription</field>
+        <field name="prefix">TB</field>
+        <field name="padding">5</field>
+    </record>
+
+    <record id="plan_monthly" model="vct.subscription.plan" context="{'noupdate': True}">
+        <field name="name">Hàng tháng</field>
+        <field name="period_value">1</field>
+        <field name="period_unit">month</field>
+    </record>
+    <record id="plan_yearly" model="vct.subscription.plan" context="{'noupdate': True}">
+        <field name="name">Hàng năm</field>
+        <field name="period_value">1</field>
+        <field name="period_unit">year</field>
+    </record>
+
+    <record id="ir_cron_subscription_invoice" model="ir.cron">
+        <field name="name">Thuê bao: sinh hoá đơn định kỳ</field>
+        <field name="model_id" ref="model_vct_subscription"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_generate_invoices()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="nextcall" eval="(DateTime.now() + relativedelta(days=1))"/>
+        <field name="active" eval="True"/>
+    </record>
+</odoo>

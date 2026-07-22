@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_sign_root" name="Ký điện tử" sequence="96"/>
+    <menuitem id="menu_sign_request" name="Yêu cầu ký" parent="menu_sign_root"
+        action="action_sign_request" sequence="10"/>
+    <menuitem id="menu_sign_template" name="Mẫu ký" parent="menu_sign_root"
+        action="action_sign_template" sequence="20"
+        groups="vct_sign.group_sign_manager"/>
+</odoo>

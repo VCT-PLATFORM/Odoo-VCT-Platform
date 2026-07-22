@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="seq_rental_order" model="ir.sequence">
+        <field name="name">Đơn thuê</field>
+        <field name="code">vct.rental.order</field>
+        <field name="prefix">RENT</field>
+        <field name="padding">5</field>
+    </record>
+</odoo>

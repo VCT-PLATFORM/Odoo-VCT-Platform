@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ai_ask_wizard_view_form" model="ir.ui.view">
+        <field name="name">ai.ask.wizard.form</field>
+        <field name="model">ai.ask.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Hỏi AI">
+                <field name="res_model" invisible="1"/>
+                <field name="res_id" invisible="1"/>
+                <group>
+                    <field name="agent_id" options="{'no_create': True}"/>
+                    <field name="record_name" invisible="not res_id"/>
+                    <field name="command_id" options="{'no_create': True}"
+                           invisible="not agent_id"/>
+                </group>
+                <field name="question" placeholder="Nhập câu hỏi/yêu cầu, hoặc chọn một mẫu lệnh ở trên..."/>
+                <div class="mt-2 mb-2">
+                    <button name="action_ask" type="object" string="Hỏi AI" class="btn-primary"/>
+                </div>
+                <separator string="Kết quả" invisible="not result"/>
+                <field name="result" readonly="1" invisible="not result"/>
+                <group invisible="not result">
+                    <field name="result_field_id" options="{'no_create': True}"
+                           invisible="not res_id"/>
+                </group>
+                <footer>
+                    <button name="action_write_field" type="object" string="Ghi vào trường"
+                            invisible="not result or not result_field_id"/>
+                    <button name="action_post_chatter" type="object" string="Đăng vào chatter"
+                            class="btn-secondary" invisible="not result or not res_id"/>
+                    <button string="Đóng" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ai_ask" model="ir.actions.act_window">
+        <field name="name">Hỏi AI</field>
+        <field name="res_model">ai.ask.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

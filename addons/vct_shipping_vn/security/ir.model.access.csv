@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_vct_shipping_carrier_user,carrier user,model_vct_shipping_carrier,base.group_user,1,0,0,0
+access_vct_shipping_carrier_manager,carrier manager,model_vct_shipping_carrier,vct_shipping_vn.group_shipping_manager,1,1,1,1
+access_vct_shipment_user,shipment user,model_vct_shipment,base.group_user,1,1,1,0
+access_vct_shipment_manager,shipment manager,model_vct_shipment,vct_shipping_vn.group_shipping_manager,1,1,1,1

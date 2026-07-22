@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_fb_comment" name="Bình luận FB"
+        parent="vct_social_sales.menu_social_sales_root"
+        action="action_fb_comment" sequence="40"/>
+    <menuitem id="menu_fb_post" name="Bài đăng FB"
+        parent="vct_social_sales.menu_social_sales_root"
+        action="action_fb_post" sequence="41"/>
+</odoo>

@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_vct_sub_plan_user,plan user,model_vct_subscription_plan,base.group_user,1,0,0,0
+access_vct_sub_plan_manager,plan manager,model_vct_subscription_plan,vct_subscription.group_subscription_manager,1,1,1,1
+access_vct_sub_user,subscription user,model_vct_subscription,base.group_user,1,1,1,0
+access_vct_sub_manager,subscription manager,model_vct_subscription,vct_subscription.group_subscription_manager,1,1,1,1
+access_vct_sub_line_user,subscription line user,model_vct_subscription_line,base.group_user,1,1,1,1
+access_vct_sub_line_manager,subscription line manager,model_vct_subscription_line,vct_subscription.group_subscription_manager,1,1,1,1

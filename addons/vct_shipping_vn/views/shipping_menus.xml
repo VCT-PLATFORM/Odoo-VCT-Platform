@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_shipping_root" name="Vận chuyển VN" sequence="47"/>
+    <menuitem id="menu_shipment" name="Vận đơn" parent="menu_shipping_root"
+        action="action_shipment" sequence="10"/>
+    <menuitem id="menu_shipping_config" name="Cấu hình" parent="menu_shipping_root"
+        sequence="90" groups="vct_shipping_vn.group_shipping_manager"/>
+    <menuitem id="menu_shipping_carrier" name="Nhà vận chuyển" parent="menu_shipping_config"
+        action="action_shipping_carrier" sequence="10"/>
+</odoo>

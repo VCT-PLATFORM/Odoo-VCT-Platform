@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="shipment_view_list" model="ir.ui.view">
+        <field name="name">vct.shipment.list</field>
+        <field name="model">vct.shipment</field>
+        <field name="arch" type="xml">
+            <list string="Vận đơn" decoration-success="state=='delivered'"
+                  decoration-info="state=='created'" decoration-warning="state=='returned'">
+                <field name="name"/>
+                <field name="carrier_id"/>
+                <field name="to_name"/>
+                <field name="tracking_code"/>
+                <field name="cod_amount"/>
+                <field name="fee"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="state" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="shipment_view_form" model="ir.ui.view">
+        <field name="name">vct.shipment.form</field>
+        <field name="model">vct.shipment</field>
+        <field name="arch" type="xml">
+            <form string="Vận đơn">
+                <header>
+                    <button name="action_create_shipment" type="object" string="Tạo vận đơn (gọi hãng)"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_cancel" type="object" string="Huỷ"
+                            invisible="state == 'cancel'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,created,delivering,delivered"/>
+                </header>
+                <sheet>
+                    <div class="oe_title"><h1><field name="name" readonly="1"/></h1></div>
+                    <group>
+                        <group string="Người nhận">
+                            <field name="partner_id"/>
+                            <field name="to_name"/>
+                            <field name="to_phone"/>
+                            <field name="to_address"/>
+                            <field name="to_district_id"/>
+                            <field name="to_ward_code"/>
+                        </group>
+                        <group string="Vận chuyển">
+                            <field name="carrier_id"/>
+                            <field name="sale_order_id"/>
+                            <field name="weight"/>
+                            <field name="cod_amount"/>
+                            <field name="fee" readonly="1"/>
+                            <field name="tracking_code" readonly="1"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <group string="Phản hồi hãng" invisible="not raw_response">
+                        <field name="raw_response" nolabel="1" readonly="1"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_shipment" model="ir.actions.act_window">
+        <field name="name">Vận đơn</field>
+        <field name="res_model">vct.shipment</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

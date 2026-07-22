@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fb_comment_view_list" model="ir.ui.view">
+        <field name="name">vct.fb.comment.list</field>
+        <field name="model">vct.fb.comment</field>
+        <field name="arch" type="xml">
+            <list string="Bình luận" create="false"
+                  decoration-success="is_order_intent" decoration-muted="state=='hidden'">
+                <field name="from_name"/>
+                <field name="message"/>
+                <field name="is_order_intent"/>
+                <field name="state" widget="badge"/>
+                <field name="post_id" optional="show"/>
+                <button name="action_create_order" type="object" string="🛒 Chốt đơn"
+                        class="btn-link" icon="fa-shopping-cart"/>
+                <button name="action_open_reply" type="object" string="Trả lời"
+                        class="btn-link" icon="fa-reply"/>
+                <button name="action_hide" type="object" string="Ẩn"
+                        class="btn-link" icon="fa-eye-slash" invisible="state=='hidden'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="fb_comment_view_form" model="ir.ui.view">
+        <field name="name">vct.fb.comment.form</field>
+        <field name="model">vct.fb.comment</field>
+        <field name="arch" type="xml">
+            <form string="Bình luận" create="false">
+                <header>
+                    <button name="action_create_order" type="object" string="🛒 Chốt đơn" class="btn-primary"/>
+                    <button name="action_open_reply" type="object" string="Trả lời"/>
+                    <button name="action_hide" type="object" string="Ẩn" invisible="state=='hidden'"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="from_name"/>
+                        <field name="post_id"/>
+                        <field name="is_order_intent"/>
+                        <field name="state"/>
+                        <field name="partner_id"/>
+                    </group>
+                    <separator string="Nội dung"/>
+                    <field name="message" readonly="1"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="fb_comment_view_search" model="ir.ui.view">
+        <field name="name">vct.fb.comment.search</field>
+        <field name="model">vct.fb.comment</field>
+        <field name="arch" type="xml">
+            <search string="Bình luận">
+                <field name="from_name"/>
+                <field name="message"/>
+                <filter name="intent" string="Có ý định mua" domain="[('is_order_intent','=',True)]"/>
+                <filter name="new" string="Chưa xử lý" domain="[('state','=','new')]"/>
+                <group>
+                    <filter name="group_post" string="Bài đăng" context="{'group_by':'post_id'}"/>
+                    <filter name="group_state" string="Trạng thái" context="{'group_by':'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_fb_comment" model="ir.actions.act_window">
+        <field name="name">Bình luận</field>
+        <field name="res_model">vct.fb.comment</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_intent': 1}</field>
+    </record>
+</odoo>

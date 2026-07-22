@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="rental_order_view_list" model="ir.ui.view">
+        <field name="name">vct.rental.order.list</field>
+        <field name="model">vct.rental.order</field>
+        <field name="arch" type="xml">
+            <list string="Đơn thuê" decoration-info="state=='confirmed'"
+                  decoration-success="state=='picked_up'" decoration-muted="state in ('returned','cancel')">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="date_start"/>
+                <field name="date_return"/>
+                <field name="duration_days"/>
+                <field name="amount_total"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="state" widget="badge"
+                       decoration-info="state=='confirmed'" decoration-success="state=='picked_up'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="rental_order_view_form" model="ir.ui.view">
+        <field name="name">vct.rental.order.form</field>
+        <field name="model">vct.rental.order</field>
+        <field name="arch" type="xml">
+            <form string="Đơn thuê">
+                <header>
+                    <button name="action_confirm" type="object" string="Xác nhận đặt"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_pickup" type="object" string="Giao (bắt đầu thuê)"
+                            class="btn-primary" invisible="state != 'confirmed'"/>
+                    <button name="action_return" type="object" string="Nhận trả"
+                            class="btn-primary" invisible="state != 'picked_up'"/>
+                    <button name="action_create_invoice" type="object" string="Tạo hoá đơn"
+                            invisible="state in ('draft', 'cancel')"/>
+                    <button name="action_cancel" type="object" string="Huỷ"
+                            invisible="state in ('cancel', 'returned')"/>
+                    <button name="action_draft" type="object" string="Về nháp"
+                            invisible="state != 'cancel'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,confirmed,picked_up,returned"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_invoices" type="object"
+                                class="oe_stat_button" icon="fa-file-text-o"
+                                invisible="invoice_count == 0">
+                            <field name="invoice_count" widget="statinfo" string="Hoá đơn"/>
+                        </button>
+                    </div>
+                    <div class="oe_title"><h1><field name="name" readonly="1"/></h1></div>
+                    <group>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="duration_days"/>
+                        </group>
+                        <group>
+                            <field name="date_start"/>
+                            <field name="date_return"/>
+                            <field name="date_returned" invisible="not date_returned"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <field name="line_ids">
+                        <list editable="bottom">
+                            <field name="product_id"/>
+                            <field name="quantity"/>
+                            <field name="price_day"/>
+                            <field name="duration_days"/>
+                            <field name="price_subtotal"/>
+                            <field name="currency_id" column_invisible="1"/>
+                        </list>
+                    </field>
+                    <group class="oe_subtotal_footer">
+                        <field name="amount_total"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="rental_order_view_search" model="ir.ui.view">
+        <field name="name">vct.rental.order.search</field>
+        <field name="model">vct.rental.order</field>
+        <field name="arch" type="xml">
+            <search string="Đơn thuê">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <filter name="confirmed" string="Đã đặt" domain="[('state','=','confirmed')]"/>
+                <filter name="picked_up" string="Đang thuê" domain="[('state','=','picked_up')]"/>
+                <group>
+                    <filter name="group_state" string="Trạng thái" context="{'group_by':'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rental_order" model="ir.actions.act_window">
+        <field name="name">Đơn thuê</field>
+        <field name="res_model">vct.rental.order</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Tạo đơn thuê đầu tiên</p>
+            <p>Cho thuê sản phẩm theo kỳ, giá tính theo ngày, kiểm trùng lịch tự động.</p>
+        </field>
+    </record>
+</odoo>

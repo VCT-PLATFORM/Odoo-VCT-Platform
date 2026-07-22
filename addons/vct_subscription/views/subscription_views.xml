@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="subscription_view_list" model="ir.ui.view">
+        <field name="name">vct.subscription.list</field>
+        <field name="model">vct.subscription</field>
+        <field name="arch" type="xml">
+            <list string="Thuê bao" decoration-success="state=='progress'"
+                  decoration-muted="state=='closed'" decoration-warning="state=='paused'">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="plan_id"/>
+                <field name="recurring_total"/>
+                <field name="mrr"/>
+                <field name="next_invoice_date"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="state" widget="badge"
+                       decoration-success="state=='progress'" decoration-warning="state=='paused'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="subscription_view_form" model="ir.ui.view">
+        <field name="name">vct.subscription.form</field>
+        <field name="model">vct.subscription</field>
+        <field name="arch" type="xml">
+            <form string="Thuê bao">
+                <header>
+                    <button name="action_start" type="object" string="Chạy" class="btn-primary"
+                            invisible="state not in ('draft', 'paused')"/>
+                    <button name="action_create_invoice" type="object" string="Tạo hoá đơn"
+                            invisible="state != 'progress'"/>
+                    <button name="action_pause" type="object" string="Tạm dừng"
+                            invisible="state != 'progress'"/>
+                    <button name="action_close" type="object" string="Đóng"
+                            invisible="state in ('draft', 'closed')"/>
+                    <button name="action_draft" type="object" string="Về nháp"
+                            invisible="state != 'closed'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,progress,closed"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_invoices" type="object"
+                                class="oe_stat_button" icon="fa-file-text-o"
+                                invisible="invoice_count == 0">
+                            <field name="invoice_count" widget="statinfo" string="Hoá đơn"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="plan_id"/>
+                        </group>
+                        <group>
+                            <field name="date_start"/>
+                            <field name="next_invoice_date"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <field name="line_ids">
+                        <list editable="bottom">
+                            <field name="product_id"/>
+                            <field name="name"/>
+                            <field name="quantity"/>
+                            <field name="price_unit"/>
+                            <field name="price_subtotal"/>
+                            <field name="currency_id" column_invisible="1"/>
+                        </list>
+                    </field>
+                    <group class="oe_subtotal_footer">
+                        <field name="recurring_total"/>
+                        <field name="mrr"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="subscription_view_search" model="ir.ui.view">
+        <field name="name">vct.subscription.search</field>
+        <field name="model">vct.subscription</field>
+        <field name="arch" type="xml">
+            <search string="Thuê bao">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="plan_id"/>
+                <filter name="progress" string="Đang chạy" domain="[('state','=','progress')]"/>
+                <filter name="paused" string="Tạm dừng" domain="[('state','=','paused')]"/>
+                <group>
+                    <filter name="group_state" string="Trạng thái" context="{'group_by':'state'}"/>
+                    <filter name="group_plan" string="Gói" context="{'group_by':'plan_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_subscription" model="ir.actions.act_window">
+        <field name="name">Thuê bao</field>
+        <field name="res_model">vct.subscription</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Tạo thuê bao đầu tiên</p>
+            <p>Bán định kỳ: gói theo chu kỳ, cron tự sinh hoá đơn mỗi kỳ, theo dõi MRR.</p>
+        </field>
+    </record>
+</odoo>

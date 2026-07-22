@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_social_orders" model="ir.actions.act_window">
+        <field name="name">Đơn từ chat</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('social_source', '!=', False)]</field>
+        <field name="context">{'default_social_source': 'Mạng xã hội'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa có đơn chốt từ chat</p>
+            <p>Mở một hội thoại Zalo/Messenger và bấm "Chốt đơn" để tạo đơn bán ngay từ chat.</p>
+        </field>
+    </record>
+</odoo>

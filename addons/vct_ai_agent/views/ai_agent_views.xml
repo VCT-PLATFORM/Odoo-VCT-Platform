@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ai_agent_view_kanban" model="ir.ui.view">
+        <field name="name">ai.agent.kanban</field>
+        <field name="model">ai.agent</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="use_tools"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_global_click">
+                            <strong><field name="name"/></strong>
+                            <div class="text-muted"><field name="description"/></div>
+                            <div class="mt-1">
+                                <span t-if="record.use_tools.raw_value" class="badge text-bg-warning">Dùng công cụ ERP</span>
+                                <span t-else="" class="badge text-bg-secondary">Chỉ sinh văn bản</span>
+                            </div>
+                            <div class="mt-2">
+                                <button name="action_open_ask" type="object" class="btn btn-primary btn-sm">
+                                    Hỏi AI
+                                </button>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="ai_agent_view_list" model="ir.ui.view">
+        <field name="name">ai.agent.list</field>
+        <field name="model">ai.agent</field>
+        <field name="arch" type="xml">
+            <list string="AI Agents">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="description"/>
+                <field name="use_tools" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="ai_agent_view_form" model="ir.ui.view">
+        <field name="name">ai.agent.form</field>
+        <field name="model">ai.agent</field>
+        <field name="arch" type="xml">
+            <form string="AI Agent">
+                <header>
+                    <button name="action_open_ask" type="object" string="Hỏi AI" class="btn-primary"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Vd: Trợ lý chung"/></h1>
+                        <field name="description" placeholder="Mô tả ngắn"/>
+                    </div>
+                    <group>
+                        <field name="use_tools"/>
+                        <field name="active" invisible="1"/>
+                    </group>
+                    <separator string="Vai trò &amp; quy tắc ứng xử (system prompt)"/>
+                    <field name="role" placeholder="Bạn là... Nhiệm vụ... Quy tắc... Giới hạn..."/>
+                    <separator string="Mẫu lệnh nhanh"/>
+                    <field name="command_ids">
+                        <list editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="name"/>
+                            <field name="prompt"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ai_agent" model="ir.actions.act_window">
+        <field name="name">AI Agents</field>
+        <field name="res_model">ai.agent</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Tạo AI Agent đầu tiên</p>
+            <p>Định vai trò, quy tắc và quyền dùng công cụ cho từng agent, rồi "Hỏi AI" ở bất kỳ đâu.</p>
+        </field>
+    </record>
+</odoo>

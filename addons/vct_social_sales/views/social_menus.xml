@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_social_sales_root" name="Bán hàng đa kênh" sequence="44"/>
+    <menuitem id="menu_social_orders" name="Đơn từ chat" parent="menu_social_sales_root"
+        action="action_social_orders" sequence="10"/>
+    <menuitem id="menu_social_zalo" name="Hội thoại Zalo" parent="menu_social_sales_root"
+        action="vct_helpdesk_zalo.action_vct_zalo_conversation" sequence="20"/>
+    <menuitem id="menu_social_messenger" name="Hội thoại Messenger" parent="menu_social_sales_root"
+        action="vct_helpdesk_messenger.action_vct_messenger_conversation" sequence="30"/>
+</odoo>

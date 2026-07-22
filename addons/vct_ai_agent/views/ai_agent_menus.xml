@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_ai_agent_root" name="AI Agents" sequence="97"/>
+    <menuitem id="menu_ai_ask" name="Hỏi AI" parent="menu_ai_agent_root"
+        action="action_ai_ask" sequence="10"/>
+    <menuitem id="menu_ai_agent" name="Cấu hình Agents" parent="menu_ai_agent_root"
+        action="action_ai_agent" sequence="20"/>
+</odoo>

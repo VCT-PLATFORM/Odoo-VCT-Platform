@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="shipping_carrier_view_list" model="ir.ui.view">
+        <field name="name">vct.shipping.carrier.list</field>
+        <field name="model">vct.shipping.carrier</field>
+        <field name="arch" type="xml">
+            <list string="Nhà vận chuyển">
+                <field name="name"/>
+                <field name="provider"/>
+                <field name="shipment_count"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="shipping_carrier_view_form" model="ir.ui.view">
+        <field name="name">vct.shipping.carrier.form</field>
+        <field name="model">vct.shipping.carrier</field>
+        <field name="arch" type="xml">
+            <form string="Nhà vận chuyển">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="provider"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group string="Khoá API (bạn nhập)">
+                            <field name="token" password="True"/>
+                            <field name="shop_id"/>
+                            <field name="base_url" placeholder="Bỏ trống = endpoint mặc định"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-info" role="alert">
+                        Nhập Token/Shop ID từ tài khoản đối tác của hãng để tạo vận đơn thật.
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_shipping_carrier" model="ir.actions.act_window">
+        <field name="name">Nhà vận chuyển</field>
+        <field name="res_model">vct.shipping.carrier</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

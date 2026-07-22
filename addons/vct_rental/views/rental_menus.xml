@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_rental_root" name="Cho thuê" sequence="46"/>
+    <menuitem id="menu_rental_order" name="Đơn thuê" parent="menu_rental_root"
+        action="action_rental_order" sequence="10"/>
+</odoo>
